@@ -1,0 +1,30 @@
+
+.container {
+  padding: 0 0 10px 0;
+  font-size: 14px;
+  background-color: #FAFAFA;
+  overflow-y: auto;
+}
+
+.label {
+  height: 28px;
+  padding: 5px 10px;
+  color: #9DAAB9;
+  letter-spacing: 0.5px;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.item {
+  height: 28px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+
+.item-selected {
+  composes: item;
+  background-color: #9DAAB9;
+  color: #fff;
+}

@@ -1,6 +1,6 @@
-.Titlebar {
+.container {
   height: 38px;
-  padding: 0 10px;
+  padding: 0 10px 0 78px;
   background-color: #fafafa;
   -webkit-app-region: drag;
   background-image: linear-gradient(
@@ -11,4 +11,76 @@
   );
   border-bottom: 1px solid #afafaf;
   font-size: 13px;
+  position: relative;
+}
+
+.item-container {
+  > div >  * + * {
+    margin-left: 10px;
+  }
+}
+
+.center {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.button {
+  z-index: 1;
+  min-width: 40px;
+  overflow: visible;
+  position: relative;
+  height: 22px;
+  border: none;
+  background: none;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  margin: 1px;
+
+  .icon + span {
+    display: none;
+  }
+
+  &:after {
+    z-index: -1;
+    background-image: linear-gradient(#FCFCFC, #F1F1F1);
+    box-shadow: 0 1px 0 #FDFDFD inset;
+    border-radius: inherit;
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  &:before {
+    z-index: -1;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.1));
+    border-radius: inherit;
+    content: '';
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    bottom: -1px;
+    left: -1px;
+  }
+
+  &:active {
+    &:after {
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+      background-image: linear-gradient(#E5E5E5, #DCDCDC);
+    }
+  }
+
+  .icon + span {
+    margin-left: 5px;
+  }
+
+  .icon {
+    color: #737373;
+    position: relative;
+    top: 1px
+  }
 }

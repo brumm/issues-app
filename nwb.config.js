@@ -6,7 +6,8 @@ const ComponentDirectoryPlugin = require('component-directory-webpack-plugin');
 const cssConfig = {
   options: {
     modules: true,
-    localIdentName: '[local]-[hash:base64:10]'
+    localIdentName: '[local]-[hash:base64:10]',
+    camelCase: true
   }
 }
 

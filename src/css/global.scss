@@ -2,5 +2,9 @@
 @import "defaults";
 
 :global {
-  
+  .octicon {
+    min-width: 16px;
+    min-height: 16px;
+    text-align: center;
+  }
 }
