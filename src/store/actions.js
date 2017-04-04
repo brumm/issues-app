@@ -7,7 +7,9 @@ import parseGithubUrl from 'parse-github-url'
 
 import {
   issue as issueSchema,
-  comment as commentSchema
+  comment as commentSchema,
+  notification as notificationSchema,
+  event as eventSchema,
 } from './schemas'
 
 const defaultPayload = (action, state, res) => getJSON(res)
@@ -38,9 +40,27 @@ export const fetch = (url, { options, reducerKey, payload = defaultPayload }) =>
   }
 }
 
+export const loadNotifications = () => (dispatch, getState) => {
+  dispatch(fetch('notifications?all=true', {
+    reducerKey: 'ENTITIES',
+    payload: (...args) => (
+      defaultPayload(...args).then(notifications => (
+        normalize(notifications, [notificationSchema])
+      ))
+    )
+  }))
+}
+
 export const bootstrap = token => (dispatch, getState) => {
   dispatch(setToken(token))
   dispatch(fetch('user', { reducerKey: 'USER' }))
+  dispatch(loadNotifications())
+}
+
+export const refresh = token => (dispatch, getState) => {
+  dispatch(fetch('user', { reducerKey: 'USER' }))
+  dispatch(loadIssues())
+  dispatch(loadNotifications())
 }
 
 export const loadIssues = () => (dispatch, getState) => {
@@ -59,6 +79,13 @@ export const loadIssues = () => (dispatch, getState) => {
     dispatch({
       type: 'ENTITIES/SUCCESS',
       payload: normalize(issues, [issueSchema]),
+      meta: { uuid },
+    })
+  ))
+  .catch(e => (
+    dispatch({
+      type: 'ENTITIES/FAILURE',
+      payload: e,
       meta: { uuid },
     })
   ))
@@ -86,10 +113,7 @@ export const loadComments = issueId => (dispatch, getState) => {
     entities.issues = {
       [issueId]: {
         ...issue,
-        commentIds: [
-          ...issue.commentIds,
-          ...result
-        ]
+        commentIds: result
       }
     }
 
@@ -98,8 +122,55 @@ export const loadComments = issueId => (dispatch, getState) => {
       payload: { result, entities },
       meta: { uuid },
     })
-
   })
+  .catch(e => (
+    dispatch({
+      type: 'ENTITIES/FAILURE',
+      payload: e,
+      meta: { uuid },
+    })
+  ))
+}
+
+export const loadIssueEvents = issueId => (dispatch, getState) => {
+  const uuid = makeUuid()
+  const issue = getState().entities.issues[issueId]
+  const { html_url } = issue
+  const { owner, name, filepath: number } = parseGithubUrl(html_url)
+
+  dispatch({ type: 'ENTITIES/REQUEST', meta: { uuid }})
+
+  ghRequestAll({
+    url: `repos/${owner}/${name}/issues/${number}/events`,
+    headers: {
+      'User-Agent': 'whatsgit',
+      'Accept': 'application/vnd.github.v3+json',
+      'Authorization': `token ${getState().user.token}`,
+    },
+    mapToResult: item => item
+  }).then(events => {
+    const { result, entities } = normalize(events, [eventSchema])
+
+    entities.issues = {
+      [issueId]: {
+        ...issue,
+        eventIds: result
+      }
+    }
+
+    return dispatch({
+      type: 'ENTITIES/SUCCESS',
+      payload: { result, entities },
+      meta: { uuid },
+    })
+  })
+  .catch(e => (
+    dispatch({
+      type: 'ENTITIES/FAILURE',
+      payload: e,
+      meta: { uuid },
+    })
+  ))
 }
 
 const setToken = token => ({
@@ -107,6 +178,9 @@ const setToken = token => ({
   payload: token
 })
 
-export const logout = token => ({
-  type: 'RESET'
-})
+export const logout = token => dispatch => {
+  dispatch({
+    type: 'RESET'
+  })
+  window.location.href = '/'
+}

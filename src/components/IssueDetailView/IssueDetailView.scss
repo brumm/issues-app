@@ -1,3 +1,6 @@
+.container {
+  background-color: #E9EFF4;
+}
 
 .header {
   padding: 10px;
@@ -20,4 +23,30 @@
   &:hover {
     text-decoration: underline;
   }
+}
+
+.labels {
+  margin-top: 6px;
+}
+
+.label {
+  font-size: 9px;
+  border-radius: 100px;
+  height: 14px;
+  padding: 2px 7px;
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+
+  & + & {
+    margin-left: 4px;
+  }
+}
+
+.issue-body {
+  padding: 24px;
+  overflow: hidden;
+  border-bottom: 1px solid #E5E5E5;
+  background-color: #fff;
 }

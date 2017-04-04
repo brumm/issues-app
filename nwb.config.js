@@ -26,6 +26,7 @@ module.exports = {
       },
       target: 'electron-renderer'
     },
+    uglify: false,
     html: {
       template: path.resolve('./src/index.html'),
       title: package.name

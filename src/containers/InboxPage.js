@@ -1,13 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { actionCreators } from 'store'
-import map from 'lodash/map'
-import sortBy from 'lodash/sortBy'
 import SplitLayout from 'react-split-layout'
 import { Route } from 'react-router-dom'
 
-
-import { mapObject } from 'utils'
 import { Row, Column } from 'components/Layout'
 import Sidebar from 'components/Sidebar'
 import IssueListView from 'components/IssueListView'
@@ -26,21 +22,17 @@ export default class InboxPage extends React.Component {
     const {
       issueId,
       entities,
+      columnSizes,
+      onColumnResize,
     } = this.props
-
-    let issues = mapObject(entities.issues, (id, issue) => issue)
-      .sort((a, b) => Date.parse(a.created_at) < Date.parse(b.created_at) ? -1 : 1)
-      .sort((a, b) => Date.parse(a.updated_at) < Date.parse(b.updated_at) ? -1 : 1)
-
-    issues = sortBy(issues, ['unread', ({state}) => state === 'open']).reverse()
-
+    const { issues, notifications } = entities
 
     return (
       <Row grow={1}>
         <SplitLayout
           direction="vertical"
-          onChange={this.onChange}
-          initialSizes={[150, 500, null]}
+          onChange={onColumnResize}
+          initialSizes={columnSizes}
           minSizes={[100, 300, 100, 100]}
           maxSizes={[400, (window.innerWidth / 3) * 2, null]}
           dividerColor='#858585'
@@ -51,13 +43,24 @@ export default class InboxPage extends React.Component {
         >
           <Sidebar
             groups={{
+              '': {
+                'All Issues & PRs': 1,
+              },
               'Filters': {
-                'All Issues': 1
+                'Assigned to me': 1,
+                'Created by me': 1,
+                'Participating': 1,
+              },
+              'My Repos': {
+                'brumm/whatsgit': 1,
               }
             }}
           />
           <Column>
-            <IssueListView issues={issues} />
+            <IssueListView
+              issues={issues}
+              notifications={notifications}
+            />
           </Column>
 
           {issueId ? (

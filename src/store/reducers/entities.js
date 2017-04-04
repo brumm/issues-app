@@ -5,6 +5,9 @@ const initialState = {
   issues: {},
   labels: {},
   comments: {},
+  notifications: {},
+  repositories: {},
+  events: {},
 }
 
 export default (

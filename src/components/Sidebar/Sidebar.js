@@ -19,7 +19,7 @@ export default class Sidebar extends React.Component {
     return (
       <Column className={css.container} grow={1}>
         {user.data && (
-          <UserBadge avatar={user.data.avatar_url} name={user.data.login} containerStyle={{ padding: 10 }} />
+          <UserBadge avatar={user.data.avatar_url} radius={2} name={user.data.login} containerStyle={{ padding: 10 }} />
         )}
         {mapObject(groups, (groupLabel, items) => (
           <Column shrink={0} key={groupLabel}>
@@ -28,7 +28,7 @@ export default class Sidebar extends React.Component {
             </Row>
 
             {mapObject(items, (itemLabel, item) => (
-              <Row alignItems='center' className={css.itemSelected} shrink={0} key={itemLabel}>
+              <Row alignItems='center' className={css.item} shrink={0} key={itemLabel}>
                 {itemLabel}
               </Row>
             ))}

@@ -6,7 +6,13 @@ import { Row } from 'components/Layout'
 
 import css from './Titlebar.scss'
 
-export const TitlebarButton = ({active, icon, label, spin, ...props}) => (
+export const TitlebarButton = ({
+  active,
+  icon,
+  label,
+  spin,
+  ...props,
+}) => (
   <Flex
     {...props}
     tagName='button'
@@ -15,22 +21,26 @@ export const TitlebarButton = ({active, icon, label, spin, ...props}) => (
     className={css.button}
   >
    <Octicon className={css.icon} name={icon} spin={spin} />
-    <span>{label}</span>
+    {label && <span>{label}</span>}
   </Flex>
 )
 
-export default ({ left, center, right }) => (
+export default ({
+  left,
+  center,
+  right,
+  columnSizes: [leftWidth, centerWidth],
+}) => (
   <Row
     className={css.container}
     justifyContent='center'
-    alignItems='center'
     shrink={0}
   >
-    <Row className={css.itemContainer} justifyContent='flex-start' grow={1}>
+    <Row justifyContent='flex-end' className={css.itemContainer} style={{ paddingLeft: 78, width: leftWidth }}>
       {left}
     </Row>
 
-    <Row className={css.title}>
+    <Row justifyContent='flex-start' className={css.itemContainer} style={{ width: centerWidth }}>
       {center}
     </Row>
 

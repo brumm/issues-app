@@ -11,7 +11,12 @@ const UserBadge = ({ avatar, name, radius, size = 20, style, containerStyle }) =
       marginRight: name ? 5 : null,
       ...style,
     }}>
-      <img src={avatar} alt={name} />
+      <img src={`${avatar}'&s=${size}'`} alt={name} style={{
+        backgroundColor: '#E5E5E5',
+        borderRadius: radius || size,
+        width: size,
+        height: size,
+      }} />
     </div>
     {name && <div>{name}</div>}
   </Row>

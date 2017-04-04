@@ -6,29 +6,17 @@ import { connect } from 'react-redux'
 import Octicon from 'react-octicon'
 
 import { actionCreators } from 'store'
-import startGithubAuth from 'github-auth-window'
 
 import Titlebar, { TitlebarButton } from 'components/Titlebar'
 import { Row, Column } from 'components/Layout'
 
 import InboxPage from 'containers/InboxPage'
+import LoginPage from 'containers/LoginPage'
 
 import style from './App.scss'
 
 const currentWindow = remote.getCurrentWindow()
-
 currentWindow.setSheetOffset(38)
-
-const LoginPage = ({ onGetToken }) => (
-  <Row grow={1} justifyContent='center' alignItems='center'>
-    <button onClick={() => (
-      startGithubAuth(currentWindow)
-        .then(onGetToken)
-    )}>
-      Login with Github
-    </button>
-  </Row>
-)
 
 @connect(({
   user,
@@ -39,34 +27,54 @@ const LoginPage = ({ onGetToken }) => (
 }), actionCreators)
 
 class App extends React.Component {
+  state = {
+    columnSizes: [150, 500, null]
+  }
+
+  onColumnResize = columnSizes => this.setState({ columnSizes })
+
   render () {
     const {
       issueId,
       bootstrap,
-      loadIssues,
+      refresh,
       logout,
       isLoading,
       user,
     } = this.props
 
+    const { columnSizes } = this.state
+
     return (
       <Column className={style.container}>
         <Titlebar
-          left={
-            isLoading && <Octicon spin name='sync'/>
+          columnSizes={columnSizes}
+          left={null}
+          center={
+            user.token && <TitlebarButton icon='pencil' />
           }
-          center={null}
           right={user.token && (
             <Row>
-              <TitlebarButton label='Refresh' icon='sync' onClick={() => loadIssues() } spin={isLoading} />
-              <TitlebarButton label='Sign out' icon='sign-out' onClick={() => logout() } />
+              <TitlebarButton icon='sync' onClick={refresh} spin={isLoading} />
+              <TitlebarButton icon='sign-out' onClick={() => logout() } />
             </Row>
           )}
         />
 
         {do {
-          if (!user.token) { <LoginPage onGetToken={token => bootstrap(token)} /> }
-          else if (user.data) { <InboxPage issueId={issueId} /> }
+          if (!user.token) {
+            <LoginPage
+              currentWindow={currentWindow}
+              onGetToken={token => bootstrap(token)}
+            />
+          }
+          else if (user.data) {
+            <InboxPage
+              columnSizes={columnSizes}
+              onColumnResize={this.onColumnResize}
+              issueId={issueId}
+            />
+          }
         }}
       </Column>
     )

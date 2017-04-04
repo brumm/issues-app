@@ -1,0 +1,28 @@
+.container {
+  margin: 5px;
+  overflow: hidden;
+  border-bottom: 1px solid #d9e0e6;
+  background-color: #fff;
+}
+
+.header {
+  padding: 10px;
+  background-color: #fafafa;
+}
+
+.username {
+  margin-left: 10px;
+  font-size: 14px;
+  color: silver;
+}
+
+.body {
+  overflow: hidden;
+  flex-shrink: 0;
+  padding: 10px;
+  border-top: 1px solid #E8E8E8;
+}
+
+.comment-body {
+  padding: 10px;
+}
