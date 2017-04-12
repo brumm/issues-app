@@ -11,6 +11,7 @@ export const TitlebarButton = ({
   icon,
   label,
   spin,
+  isFocused,
   ...props,
 }) => (
   <Flex
@@ -18,7 +19,7 @@ export const TitlebarButton = ({
     tagName='button'
     alignItems='center'
     justifyContent='center'
-    className={css.button}
+    className={isFocused ? css.buttonFocused : css.button}
   >
    <Octicon className={css.icon} name={icon} spin={spin} />
     {label && <span>{label}</span>}
@@ -29,10 +30,11 @@ export default ({
   left,
   center,
   right,
+  isFocused,
   columnSizes: [leftWidth, centerWidth],
 }) => (
   <Row
-    className={css.container}
+    className={isFocused ? css.containerFocused : css.container}
     justifyContent='center'
     shrink={0}
   >

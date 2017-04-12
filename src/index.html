@@ -8,6 +8,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <style>
+        html, body {
+          padding: 0;
+          margin: 0;
+        }
+        .fake-titlebar {
+          height: 38px;
+          padding-right: 10px;
+          background-color: #fafafa;
+          -webkit-app-region: drag;
+          background-image: linear-gradient(
+            #ededed 0,
+            #ededed 1px,
+            #e7e7e7 2px,
+            #d1d1d1 100%
+          );
+          border-bottom: 1px solid #afafaf;
+        }
+      </style>
+      <div class="fake-titlebar"></div>
+    </div>
   </body>
 </html>

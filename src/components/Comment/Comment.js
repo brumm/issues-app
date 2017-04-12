@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import { Row, Column } from 'components/Layout'
 import UserBadge from 'components/UserBadge'
-import GithubFlavoredMarkdown from 'components/GithubFlavoredMarkdown'
+import GithubFlavoredMarkdown from 'components/GithubFlavoredMarkdown/GithubFlavoredMarkdown'
 
 import css from './Comment.scss'
 
@@ -14,7 +14,7 @@ const mapStateToProps = ({ entities }, { user: userId }) => ({
 
 const Comment = ({ compact = false, user, body, updated_at }) => (
   <Column className={css.container} shrink={0} style={{ marginTop: compact ? -3 : null }}>
-    {compact === false && (
+    {compact === false ? (
       <Row className={css.header} shrink={0} alignItems='center' grow={1}>
         <UserBadge size={28} radius={3} avatar={user.avatar_url} />
 
@@ -22,6 +22,10 @@ const Comment = ({ compact = false, user, body, updated_at }) => (
           {user.login} commented <TimeAgo date={updated_at} />
         </div>
       </Row>
+    ) : (
+      <div className={css.username}>
+        {user.login} commented <TimeAgo date={updated_at} />
+      </div>
     )}
 
     <GithubFlavoredMarkdown className={css.commentBody} source={body} />

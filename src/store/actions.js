@@ -58,7 +58,6 @@ export const bootstrap = token => (dispatch, getState) => {
 }
 
 export const refresh = token => (dispatch, getState) => {
-  dispatch(fetch('user', { reducerKey: 'USER' }))
   dispatch(loadIssues())
   dispatch(loadNotifications())
 }

@@ -1,0 +1,29 @@
+.button {
+  border: none;
+  background-color: rgba(255, 255, 255, 0.2);
+  background-image: linear-gradient(
+    rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2)
+  );
+  border-radius: 10px;
+  padding: 22px 34px;
+  font-size: 28px;
+  font-weight: 600;
+
+  transition: box-shadow 500ms ease-in-out;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.1),
+      0 2px 120px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.icon {
+  font-size: 40px;
+}
+
+.label {
+  margin-left: 20px;
+  padding: 3px 0;
+}

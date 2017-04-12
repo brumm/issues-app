@@ -5,12 +5,13 @@ import groupBy from 'lodash/groupBy'
 
 import { actionCreators } from 'store'
 
-import { Row, Column } from 'components/Layout'
+import { Row, Column, Center } from 'components/Layout'
 import UserBadge from 'components/UserBadge'
-import Comment from 'components/Comment'
-import Event from 'components/Event'
-import GithubFlavoredMarkdown from 'components/GithubFlavoredMarkdown'
+import Comment from 'components/Comment/Comment'
+import Event from 'components/Event/Event'
+import GithubFlavoredMarkdown from 'components/GithubFlavoredMarkdown/GithubFlavoredMarkdown'
 import ExternalLink from 'components/ExternalLink'
+import Loading from 'components/Loading'
 
 import css from './IssueDetailView.scss'
 
@@ -29,7 +30,7 @@ import css from './IssueDetailView.scss'
 
 export default class IssueDetailView extends React.Component {
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadComments(this.props.issue.id)
   }
 
@@ -40,8 +41,10 @@ export default class IssueDetailView extends React.Component {
   }
 
   loadComments(issueId) {
-    this.props.loadComments(issueId)
-    this.props.loadIssueEvents(issueId)
+    setTimeout(() => {
+      this.props.loadComments(issueId)
+      this.props.loadIssueEvents(issueId)
+    }, 1000)
   }
 
   render () {
@@ -58,6 +61,7 @@ export default class IssueDetailView extends React.Component {
       comments,
       events,
       labels,
+      isLoading,
     } = this.props
 
     const commentsAndEvents = [
@@ -88,22 +92,29 @@ export default class IssueDetailView extends React.Component {
           </Column>
         </Row>
 
-        <Column style={{overflowY: 'auto'}}>
+        <Column grow={1} style={{overflowY: 'auto'}}>
           {body && <GithubFlavoredMarkdown className={css.issueBody} source={body} />}
-
-          <Column shrink={0} style={{ padding: 5 }}>
-            {commentsAndEvents.map((commentOrEvent, index) => {
-              if (commentOrEvent.actor !== undefined) {
-                const previousEvent = commentsAndEvents[index - 1]
-                const isConsecutive = previousEvent && previousEvent.actor === commentOrEvent.actor
-                return <Event compact={isConsecutive} key={commentOrEvent.id} {...commentOrEvent} />
-              } else {
-                const previousComment = commentsAndEvents[index - 1]
-                const isConsecutive = previousComment && previousComment.user === commentOrEvent.user
-                return <Comment compact={isConsecutive} key={commentOrEvent.id} {...commentOrEvent} />
-              }
-            })}
-          </Column>
+          {commentsAndEvents.length === 0 ? (
+            isLoading && (
+              <Center>
+                <Loading />
+              </Center>
+            )
+          ) : (
+            <Column shrink={0} style={{ padding: 5 }}>
+              {commentsAndEvents.map((commentOrEvent, index) => {
+                if (commentOrEvent.actor !== undefined) {
+                  const previousEvent = commentsAndEvents[index - 1]
+                  const isConsecutive = previousEvent && previousEvent.actor === commentOrEvent.actor
+                  return <Event compact={isConsecutive} key={commentOrEvent.id} {...commentOrEvent} />
+                } else {
+                  const previousComment = commentsAndEvents[index - 1]
+                  const isConsecutive = previousComment && previousComment.user === commentOrEvent.user
+                  return <Comment compact={isConsecutive} key={commentOrEvent.id} {...commentOrEvent} />
+                }
+              })}
+            </Column>
+          )}
         </Column>
 
       </Column>

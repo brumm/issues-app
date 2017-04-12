@@ -1,6 +1,6 @@
 {
   "name": "nwb-electron-starter",
-  "productName": "My Electron App",
+  "productName": "Issues",
   "version": "1.0.0",
   "description": "Describe nwb-electron-starter here",
   "main": "dist/index.js",
@@ -13,7 +13,7 @@
     "server": "node dev-server.js --run-electron",
     "test": "nwb test",
     "test:watch": "nwb test --server",
-    "package": "rm -rf ./release && electron-packager --overwrite --asar='true' --ignore='src|main|tests' --prune --platform=darwin --arch=x64 --out='release' ."
+    "package": "rm -rf ./release && electron-packager --icon icon-1024.icns --overwrite --asar='true' --ignore='src|main|tests' --prune --platform=darwin --arch=x64 --out='release' ."
   },
   "dependencies": {
     "component-directory-webpack-plugin": "^1.0.5",
@@ -23,6 +23,7 @@
     "flex-component": "^0.1.3",
     "github-parse-link": "^1.1.1",
     "github-request-all": "^1.1.0",
+    "halogen": "^0.2.0",
     "idb-keyval": "^2.3.0",
     "markdown-it": "^8.3.1",
     "markdown-it-emoji": "^1.3.0",
@@ -37,8 +38,8 @@
     "react-octicon": "^2.0.0",
     "react-redux": "^5.0.3",
     "react-router-dom": "^4.0.0-beta.6",
-    "react-split-layout": "^1.3.0",
     "react-timeago": "^3.2.0",
+    "react-virtualized": "^9.7.3",
     "redux": "^3.6.0",
     "redux-api-middleware": "^1.0.2",
     "redux-logger": "^2.8.2",

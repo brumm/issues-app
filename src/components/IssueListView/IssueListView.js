@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, withRouter } from 'react-router-dom'
 import Flex from 'flex-component'
 import removeMarkdown from 'remove-markdown'
 import Octicon from 'react-octicon'
@@ -8,12 +8,15 @@ import parseGithubUrl from 'parse-github-url'
 import sortBy from 'lodash/sortBy'
 import TimeAgo from 'react-timeago'
 import { connect } from 'react-redux'
+import { List, AutoSizer } from 'react-virtualized'
 
 import { mapObject } from 'utils'
 import { Row, Column } from 'components/Layout'
 
+import 'react-virtualized/styles.css'
 import css from './IssueListView.scss'
 
+@withRouter
 @connect(({ entities }, { user }) => ({
   user: entities.users[user]
 }))
@@ -32,21 +35,18 @@ class ListItem extends React.Component {
       unread,
       created_at,
       user,
+      style,
     } = this.props
     const truncatedBody = removeMarkdown(striptags(body)).slice(0, 200)
 
     return (
       <NavLink
+        key={id}
         to={`/${id}`}
+        style={style}
         className={[css.item, state].join(' ')}
         activeClassName={css.itemSelected}
-        key={id}
       >
-        {/* <Flex className={css.repo} alignItems='center'>
-          <TimeAgo className={css.repo} date={created_at} />
-          <span className={css.repo} style={{ marginLeft: 4 }}>by {user.login}</span>
-        </Flex> */}
-
         <Flex className={css.repo} alignItems='center'>
           {unread && <div className={css.unreadMarker} />}
 
@@ -83,26 +83,43 @@ class ListItem extends React.Component {
 
 export default class IssuesList extends React.Component {
   render() {
-    let { issues, notifications } = this.props
+    let {
+      issues,
+      notifications,
+    } = this.props
 
     issues = mapObject(issues, (id, issue) => ({
       ...issue,
       unread: !!(notifications[issue.shortName] && notifications[issue.shortName].unread)
     }))
-      .sort((a, b) => Date.parse(a.created_at) < Date.parse(b.created_at) ? -1 : 1)
-      .sort((a, b) => Date.parse(a.updated_at) < Date.parse(b.updated_at) ? -1 : 1)
 
-    issues = sortBy(issues, ['unread', ({state}) => state === 'open']).reverse()
+    issues = sortBy(issues, [
+      'unread',
+      ({ state }) => state === 'open',
+      ({ updated_at }) => Date.parse(updated_at).valueOf(),
+      ({ created_at }) => Date.parse(created_at).valueOf(),
+    ]).reverse()
 
     return (
-      <Column grow={1} className={css.container}>
-        {issues.map(issue => (
-          <ListItem
-            key={issue.id}
-            {...issue}
+      <AutoSizer>
+        {({ height, width }) => (
+          <List
+            className={css.container}
+            style={{ flexGrow: 1 }}
+            height={height}
+            rowHeight={131}
+            rowCount={issues.length}
+            rowRenderer={({ key, index, style }) => (
+              <ListItem
+                key={key}
+                style={style}
+                {...issues[index]}
+              />
+            )}
+            width={width}
           />
-        ))}
-      </Column>
+        )}
+      </AutoSizer>
     )
   }
 }

@@ -1,8 +1,15 @@
 .container {
   height: 38px;
   padding-right: 10px;
-  background-color: #fafafa;
   -webkit-app-region: drag;
+  font-size: 13px;
+  position: relative;
+  background-color: #F6F6F6;
+  border-bottom: 1px solid #C3C3C3;
+}
+
+.container-focused {
+  composes: container;
   background-image: linear-gradient(
     #ededed 0,
     #ededed 1px,
@@ -10,8 +17,6 @@
     #d1d1d1 100%
   );
   border-bottom: 1px solid #afafaf;
-  font-size: 13px;
-  position: relative;
 }
 
 .item-container {
@@ -23,6 +28,9 @@
 }
 
 .button {
+  $border-radius: 4px;
+  $border-width: 1px;
+
   z-index: 1;
   min-width: 40px;
   overflow: visible;
@@ -31,16 +39,15 @@
   min-height: 22px;
   border: none;
   background: none;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
+  border-radius: $border-radius;
   margin: 1px;
   -webkit-app-region: no-drag;
 
   &:after {
     z-index: -1;
-    background-image: linear-gradient(#FCFCFC, #F1F1F1);
-    box-shadow: 0 1px 0 #FDFDFD inset;
-    border-radius: inherit;
+    box-shadow: 0 2px 0px -2px #FDFDFD inset;
+    background-image: linear-gradient(#F6F6F6, #F6F6F6);
+    border-radius: $border-radius;
     content: '';
     position: absolute;
     top: 0;
@@ -50,20 +57,21 @@
   }
   &:before {
     z-index: -1;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.1));
-    border-radius: inherit;
+    background-image: linear-gradient(
+      rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)
+    );
+    border-radius: $border-radius + 1;
     content: '';
     position: absolute;
-    top: -1px;
-    right: -1px;
-    bottom: -1px;
-    left: -1px;
+    top: -$border-width;
+    right: -$border-width;
+    bottom: -$border-width;
+    left: -$border-width;
   }
 
   &:active {
     &:after {
-      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-      background-image: linear-gradient(#E5E5E5, #DCDCDC);
+      background-image: linear-gradient(#E5E5E5, #dddddd);
     }
   }
 
@@ -72,8 +80,26 @@
   }
 
   .icon {
-    color: #737373;
+    color: #B2B2B2;
     position: relative;
     top: 1px
+  }
+}
+
+.button-focused {
+  composes: button;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+
+  .icon {
+    color: #737373;
+  }
+
+  &:before {
+    background-image: linear-gradient(
+      rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.1)
+    );
+  }
+  &:after {
+    background-image: linear-gradient(#FCFCFC, #F1F1F1);
   }
 }

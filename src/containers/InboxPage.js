@@ -4,16 +4,24 @@ import { actionCreators } from 'store'
 import SplitLayout from 'react-split-layout'
 import { Route } from 'react-router-dom'
 
-import { Row, Column } from 'components/Layout'
-import Sidebar from 'components/Sidebar'
-import IssueListView from 'components/IssueListView'
-import IssueDetailView from 'components/IssueDetailView'
+import { Row, Column, Center } from 'components/Layout'
+import Sidebar from 'components/Sidebar/Sidebar'
+import IssueListView from 'components/IssueListView/IssueListView'
+import IssueDetailView from 'components/IssueDetailView/IssueDetailView'
+import Loading from 'components/Loading'
 
-@connect(({ entities }) => ({ entities }), actionCreators)
+@connect(({
+  entities
+}) => ({
+  notifications: entities.notifications,
+  issues: Object.keys(entities.issues).length === 0
+    ? false
+    : entities.issues
+}), actionCreators)
 export default class InboxPage extends React.Component {
 
-  componentWillMount() {
-    if (Object.keys(this.props.entities.issues).length === 0) {
+  componentDidMount() {
+    if (this.props.issues === false) {
       this.props.loadIssues()
     }
   }
@@ -21,11 +29,13 @@ export default class InboxPage extends React.Component {
   render() {
     const {
       issueId,
-      entities,
+      issues,
+      notifications,
       columnSizes,
       onColumnResize,
+      isFocused,
+      isLoading,
     } = this.props
-    const { issues, notifications } = entities
 
     return (
       <Row grow={1}>
@@ -35,13 +45,14 @@ export default class InboxPage extends React.Component {
           initialSizes={columnSizes}
           minSizes={[100, 300, 100, 100]}
           maxSizes={[400, (window.innerWidth / 3) * 2, null]}
-          dividerColor='#858585'
+          dividerColor={['rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)']}
           style={{
             position: 'relative',
             height: null,
           }}
         >
           <Sidebar
+            isFocused={isFocused}
             groups={{
               '': {
                 'All Issues & PRs': 1,
@@ -56,19 +67,26 @@ export default class InboxPage extends React.Component {
               }
             }}
           />
-          <Column>
-            <IssueListView
-              issues={issues}
-              notifications={notifications}
-            />
-          </Column>
+
+          {issues ? (
+            <Column style={{ width: '100%', height: '100%' }}>
+              <IssueListView
+                issues={issues}
+                notifications={notifications}
+              />
+            </Column>
+          ) : (
+            <Center style={{ backgroundColor: '#fff' }}>
+              {isLoading ? <Loading /> : 'No Issues'}
+            </Center>
+          )}
 
           {issueId ? (
-            <IssueDetailView issueId={issueId} />
+            <IssueDetailView isLoading={isLoading} issueId={issueId} />
           ) : (
-            <Row style={{ height: '100%', backgroundColor: '#E9EFF4' }} alignItems='center' justifyContent='center'>
+            <Center style={{ backgroundColor: '#E9EFF4' }}>
               No Issue Selected
-            </Row>
+            </Center>
           )}
         </SplitLayout>
       </Row>

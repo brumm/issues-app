@@ -14,10 +14,11 @@ export default class Sidebar extends React.Component {
     const {
       groups,
       user,
+      isFocused,
     } = this.props
 
     return (
-      <Column className={css.container} grow={1}>
+      <Column className={isFocused ? css.containerFocused : css.container} grow={1}>
         {user.data && (
           <UserBadge avatar={user.data.avatar_url} radius={2} name={user.data.login} containerStyle={{ padding: 10 }} />
         )}

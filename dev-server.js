@@ -12,7 +12,7 @@ app.use(nwbExpress(express, {
   info: false,
   reload: true,
   fallback: true,
-  autoInstall: true
+  // autoInstall: true
 }))
 
 app.listen(port, 'localhost', function(err) {

@@ -2,8 +2,12 @@
 .container {
   padding: 0 0 10px 0;
   font-size: 14px;
-  background-color: #FAFAFA;
+  background-color: #F6F6F6;
   overflow-y: auto;
+}
+.container-focused {
+  composes: container;
+  background-color: transparent;
 }
 
 .label {

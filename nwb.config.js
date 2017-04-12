@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const package = require('./package.json');
-const ComponentDirectoryPlugin = require('component-directory-webpack-plugin');
+// const ComponentDirectoryPlugin = require('component-directory-webpack-plugin');
 
 const cssConfig = {
   options: {
@@ -17,7 +17,7 @@ module.exports = {
   webpack: {
     extra: {
       resolve: {
-        plugins: [new ComponentDirectoryPlugin()],
+        // plugins: [new ComponentDirectoryPlugin()],
         modules: [path.resolve('./src'), 'node_modules'],
         extensions: ['.scss']
       },

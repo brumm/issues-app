@@ -7,7 +7,7 @@ import createStore from 'store'
 import idbKeyval from 'idb-keyval'
 import omit from 'lodash/omit'
 
-import App from 'components/App'
+import App from 'components/App/App'
 
 const STATE_KEY = 'persistedState'
 const BLACKLISTED_KEYS = [
@@ -24,11 +24,9 @@ idbKeyval.get(STATE_KEY).then(persistedState => {
   render(
     <Provider store={store}>
       <Router>
-        <div>
-          <Route path='/:issueId?' render={({ match }) => (
-            <App issueId={match.params.issueId} />
-          )} />
-        </div>
+        <Route path='/:issueId?' render={({ match }) => (
+          <App issueId={match.params.issueId} />
+        )} />
       </Router>
     </Provider>,
     document.querySelector('#app')

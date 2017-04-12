@@ -87,6 +87,8 @@
     a {
       background-color: transparent;
       word-wrap: break-word;
+      max-width: 200px;
+      overflow: hidden;
       cursor: pointer;
     }
 

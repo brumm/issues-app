@@ -35,6 +35,7 @@ function createWindow () {
       minWidth: 1000,
       minHeight: 600,
       titleBarStyle: 'hidden-inset',
+      vibrancy: 'sidebar',
       webPreferences: {
         webSecurity: false
       },
