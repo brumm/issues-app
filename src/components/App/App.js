@@ -50,6 +50,7 @@ class App extends React.Component {
       logout,
       isLoading,
       user,
+      history,
     } = this.props
 
     const {
@@ -69,7 +70,7 @@ class App extends React.Component {
           right={user.token && (
             <Row>
               <TitlebarButton isFocused={isFocused} icon='sync' onClick={refresh} spin={isLoading} />
-              <TitlebarButton isFocused={isFocused} icon='sign-out' onClick={() => logout() } />
+              <TitlebarButton isFocused={isFocused} icon='sign-out' onClick={() => logout(history.replace) } />
             </Row>
           )}
         />

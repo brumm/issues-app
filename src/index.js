@@ -24,8 +24,8 @@ idbKeyval.get(STATE_KEY).then(persistedState => {
   render(
     <Provider store={store}>
       <Router>
-        <Route path='/:issueId?' render={({ match }) => (
-          <App issueId={match.params.issueId} />
+        <Route path='/:issueId?' render={({ match, history }) => (
+          <App history={history} issueId={match.params.issueId} />
         )} />
       </Router>
     </Provider>,

@@ -177,9 +177,9 @@ const setToken = token => ({
   payload: token
 })
 
-export const logout = token => dispatch => {
+export const logout = navigate => dispatch => {
   dispatch({
     type: 'RESET'
   })
-  window.location.href = '/'
+  navigate('/')
 }
