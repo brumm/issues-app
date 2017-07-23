@@ -1,14 +1,13 @@
 import React from 'react'
-import { NavLink, withRouter } from 'react-router-dom'
+import { NavLink, withRouter, Redirect } from 'react-router-dom'
 import Flex from 'flex-component'
 import removeMarkdown from 'remove-markdown'
 import Octicon from 'react-octicon'
 import striptags from 'striptags'
 import parseGithubUrl from 'parse-github-url'
-import sortBy from 'lodash/sortBy'
 import TimeAgo from 'react-timeago'
 import { connect } from 'react-redux'
-import { List, AutoSizer } from 'react-virtualized'
+import { List, AutoSizer, CellMeasurer, CellMeasurerCache } from 'react-virtualized'
 
 import { mapObject } from 'utils'
 import { Row, Column } from 'components/Layout'
@@ -36,13 +35,14 @@ class ListItem extends React.Component {
       created_at,
       user,
       style,
+      match,
     } = this.props
     const truncatedBody = removeMarkdown(striptags(body)).slice(0, 200)
 
     return (
       <NavLink
         key={id}
-        to={`/${id}`}
+        to={`/${match.params.filterId}/${id}`}
         style={style}
         className={[css.item, state].join(' ')}
         activeClassName={css.itemSelected}
@@ -81,24 +81,26 @@ class ListItem extends React.Component {
   }
 }
 
-export default class IssuesList extends React.Component {
+@withRouter
+export default class IssueListView extends React.Component {
+
+  cache = new CellMeasurerCache({
+    fixedWidth: true,
+    minHeight: 80,
+    keyMapper: rowIndex => this.props.issues[rowIndex].id
+  })
+
+
   render() {
-    let {
+    const {
       issues,
       notifications,
+      match,
     } = this.props
 
-    issues = mapObject(issues, (id, issue) => ({
-      ...issue,
-      unread: !!(notifications[issue.shortName] && notifications[issue.shortName].unread)
-    }))
-
-    issues = sortBy(issues, [
-      'unread',
-      ({ state }) => state === 'open',
-      ({ updated_at }) => Date.parse(updated_at).valueOf(),
-      ({ created_at }) => Date.parse(created_at).valueOf(),
-    ]).reverse()
+    if (!match.params.issueId) {
+      return <Redirect to={`/${match.params.filterId}/${issues[0].id}`} />
+    }
 
     return (
       <AutoSizer>
@@ -107,14 +109,23 @@ export default class IssuesList extends React.Component {
             className={css.container}
             style={{ flexGrow: 1 }}
             height={height}
-            rowHeight={131}
+            rowHeight={this.cache.rowHeight}
             rowCount={issues.length}
-            rowRenderer={({ key, index, style }) => (
-              <ListItem
+            deferredMeasurementCache={this.cache}
+            rowRenderer={({ key, index, style, parent }) => (
+              <CellMeasurer
+                cache={this.cache}
+                columnIndex={0}
                 key={key}
-                style={style}
-                {...issues[index]}
-              />
+                rowIndex={index}
+                parent={parent}
+              >
+                <ListItem
+                  key={key}
+                  style={style}
+                  {...issues[index]}
+                />
+              </CellMeasurer>
             )}
             width={width}
           />

@@ -1,6 +1,6 @@
 import React from 'react'
 import Flex from 'flex-component'
-import { Route } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 import { remote } from 'electron'
 import { connect } from 'react-redux'
 import Octicon from 'react-octicon'
@@ -21,9 +21,13 @@ currentWindow.setSheetOffset(38)
 @connect(({
   user,
   requests,
+  filters,
+}, {
+  filterId
 }) => ({
   user,
   isLoading: !!requests.length,
+  initialFilterId: filterId || Object.keys(filters)[0]
 }), actionCreators)
 
 class App extends React.Component {
@@ -36,21 +40,25 @@ class App extends React.Component {
     currentWindow.on('focus', () => this.setState({ isFocused: true }))
     currentWindow.on('blur', () => this.setState({ isFocused: false }))
   }
+
   componentWillUnmount() {
     currentWindow.removeAllListeners()
   }
 
-  onColumnResize = columnSizes => this.setState({ columnSizes })
+  onColumnResize = (columnSizes) => this.setState({ columnSizes })
 
   render () {
     const {
       issueId,
+      filterId,
       bootstrap,
       refresh,
       logout,
       isLoading,
       user,
       history,
+      location,
+      initialFilterId,
     } = this.props
 
     const {
@@ -82,6 +90,9 @@ class App extends React.Component {
               onGetToken={token => bootstrap(token)}
             />
           }
+          else if (!filterId) {
+            <Redirect to={`/${initialFilterId}`} />
+          }
           else if (user.data) {
             <InboxPage
               isLoading={isLoading}
@@ -89,6 +100,7 @@ class App extends React.Component {
               columnSizes={columnSizes}
               onColumnResize={this.onColumnResize}
               issueId={issueId}
+              filterId={filterId}
             />
           }
         }}

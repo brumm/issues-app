@@ -6,22 +6,16 @@ import {
 } from 'redux'
 import { apiMiddleware } from 'redux-api-middleware'
 import thunk from 'redux-thunk'
-import createLogger from 'redux-logger'
 
 import * as reducers from './reducers'
 export * as actionCreators from './actions'
-
-const logger = createLogger({
-  collapsed: true,
-  diff: true,
-})
 
 export default initialState => {
   const store = createStore(
     combineReducers(reducers),
     initialState,
     compose(
-      applyMiddleware(apiMiddleware, thunk, logger),
+      applyMiddleware(apiMiddleware, thunk),
       window.devToolsExtension ? window.devToolsExtension() : f => f
     )
   )

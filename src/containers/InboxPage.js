@@ -3,7 +3,12 @@ import { connect } from 'react-redux'
 import { actionCreators } from 'store'
 import SplitLayout from 'react-split-layout'
 import { Route } from 'react-router-dom'
+import groupBy from 'lodash/groupBy'
+import pick from 'lodash/pick'
+import sortBy from 'lodash/sortBy'
+import isEmpty from 'lodash/isEmpty'
 
+import { mapObject } from 'utils'
 import { Row, Column, Center } from 'components/Layout'
 import Sidebar from 'components/Sidebar/Sidebar'
 import IssueListView from 'components/IssueListView/IssueListView'
@@ -11,18 +16,38 @@ import IssueDetailView from 'components/IssueDetailView/IssueDetailView'
 import Loading from 'components/Loading'
 
 @connect(({
-  entities
+  entities,
+  filters,
+}, {
+  filterId
 }) => ({
   notifications: entities.notifications,
   issues: Object.keys(entities.issues).length === 0
     ? false
-    : entities.issues
+    : entities.issues,
+  groupedFilters: groupBy(mapObject(filters, (id, filter) => ({ ...filter, id })), 'category'),
+  activeFilter: filters[filterId],
 }), actionCreators)
 export default class InboxPage extends React.Component {
+
+  componentWillUpdate(nextProps) {
+    this.maybeRefreshFilter(nextProps)
+  }
 
   componentDidMount() {
     if (this.props.issues === false) {
       this.props.loadIssues()
+    }
+    this.maybeRefreshFilter(this.props)
+  }
+
+  maybeRefreshFilter({
+    activeFilter,
+    filterId,
+    refreshFilter,
+  }) {
+    if (activeFilter.result === null) {
+      refreshFilter(filterId)
     }
   }
 
@@ -35,7 +60,24 @@ export default class InboxPage extends React.Component {
       onColumnResize,
       isFocused,
       isLoading,
+      groupedFilters,
+      activeFilter,
     } = this.props
+
+    let filteredIssues = pick(issues, activeFilter.result)
+
+    filteredIssues = mapObject(filteredIssues, (id, issue) => ({
+      ...issue,
+      unread: !!(notifications[issue.shortName] && notifications[issue.shortName].unread)
+    }))
+
+    filteredIssues = sortBy(filteredIssues, [
+      'unread',
+      ({ state }) => state === 'open',
+      ({ updated_at }) => Date.parse(updated_at).valueOf(),
+      ({ created_at }) => Date.parse(created_at).valueOf(),
+    ]).reverse()
+
 
     return (
       <Row grow={1}>
@@ -53,25 +95,13 @@ export default class InboxPage extends React.Component {
         >
           <Sidebar
             isFocused={isFocused}
-            groups={{
-              '': {
-                'All Issues & PRs': 1,
-              },
-              'Filters': {
-                'Assigned to me': 1,
-                'Created by me': 1,
-                'Participating': 1,
-              },
-              'My Repos': {
-                'brumm/whatsgit': 1,
-              }
-            }}
+            groups={groupedFilters}
           />
 
-          {issues ? (
+          {!isEmpty(filteredIssues) ? (
             <Column style={{ width: '100%', height: '100%' }}>
               <IssueListView
-                issues={issues}
+                issues={filteredIssues}
                 notifications={notifications}
               />
             </Column>

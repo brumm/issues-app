@@ -2,8 +2,11 @@ import { CALL_API, getJSON } from 'redux-api-middleware'
 import makeUuid from 'uuid/v4'
 import merge from 'lodash/merge'
 import { normalize } from 'normalizr'
-import { ghRequestAll } from 'utils'
+import { filterObject, ghRequestAll } from 'utils'
 import parseGithubUrl from 'parse-github-url'
+import qry from 'qry'
+import { mapObject } from 'utils'
+import { batchActions } from 'redux-batched-actions'
 
 import {
   issue as issueSchema,
@@ -53,12 +56,30 @@ export const loadNotifications = () => (dispatch, getState) => {
 
 export const bootstrap = token => (dispatch, getState) => {
   dispatch(setToken(token))
+
   dispatch(fetch('user', { reducerKey: 'USER' }))
-  dispatch(loadNotifications())
+    .then(({ payload: { id, login }}) => {
+      dispatch(refresh())
+
+      dispatch(createFilter({ category: 'filter', name: 'Open Issues',    query: { state: 'open', pull_request: { $exists: false } } }))
+      dispatch(createFilter({ category: 'filter', name: 'Open PRs',       query: { state: 'open', pull_request: { $exists: true } } }))
+      dispatch(createFilter({ category: 'filter', name: 'Assigned to me', query: { 'assignees': id } }))
+      dispatch(createFilter({ category: 'filter', name: 'Created by me',  query: { 'user': id } }))
+      dispatch(createFilter({ category: 'filter', name: 'Participating',  query: { $nor: [ {'user': id}, {'assignees': id} ] } }))
+    })
+
 }
 
-export const refresh = token => (dispatch, getState) => {
+export const refresh = () => (dispatch, getState) => {
   dispatch(loadIssues())
+    .then(({ payload: { entities: { repositories, issues }}}) => (
+      dispatch(batchActions(mapObject(repositories, name => createFilter({
+        name,
+        category: 'repo',
+        query: { repository: name },
+        result: createFilterResult(issues, { repository: name })
+      }))))
+    ))
   dispatch(loadNotifications())
 }
 
@@ -67,7 +88,7 @@ export const loadIssues = () => (dispatch, getState) => {
 
   dispatch({ type: 'ENTITIES/REQUEST', meta: { uuid }})
 
-  ghRequestAll({
+  return ghRequestAll({
     url: `search/issues?q=involves:${getState().user.data.login}`,
     headers: {
       'User-Agent': 'whatsgit',
@@ -176,6 +197,33 @@ const setToken = token => ({
   type: 'USER/SET_TOKEN',
   payload: token
 })
+
+export const createFilter = filter => ({
+  type: 'FILTERS/CREATE',
+  payload: {
+    id: makeUuid(),
+    result: null,
+    ...filter,
+  }
+})
+
+const createFilterResult = (issues, query) => {
+  const predicate = qry(query)
+  const result = filterObject(issues, (id, issue) => predicate(issue))
+  return result
+}
+
+export const refreshFilter = id => (dispatch, getState) => {
+  const { query } = getState().filters[id]
+  const { issues } = getState().entities
+  const result = createFilterResult(issues, query)
+  if (result.length) {
+    return dispatch({
+      type: 'FILTERS/UPDATE_RESULT',
+      payload: { id, result }
+    })
+  }
+}
 
 export const logout = navigate => dispatch => {
   dispatch({

@@ -42,8 +42,10 @@ export default class IssueDetailView extends React.Component {
 
   loadComments(issueId) {
     setTimeout(() => {
-      this.props.loadComments(issueId)
-      this.props.loadIssueEvents(issueId)
+      if (this.props.issue.comments > 0) {
+        this.props.loadComments(issueId)
+        this.props.loadIssueEvents(issueId)
+      }
     }, 1000)
   }
 

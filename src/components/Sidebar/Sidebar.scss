@@ -1,3 +1,4 @@
+$item-height: 28px;
 
 .container {
   padding: 0 0 10px 0;
@@ -10,8 +11,8 @@
   background-color: transparent;
 }
 
-.label {
-  height: 28px;
+.group-label {
+  height: $item-height;
   padding: 5px 10px;
   color: #9DAAB9;
   letter-spacing: 0.5px;
@@ -20,15 +21,43 @@
 }
 
 .item {
-  height: 28px;
+  height: $item-height;
   padding: 0 10px;
   display: flex;
   align-items: center;
-  font-size: 12px;
 }
 
 .item-selected {
   composes: item;
-  background-color: #9DAAB9;
-  color: #fff;
+  background-color: #9FAAB8;
+
+  .count {
+    background-color: #5C6877;
+    color: #fff;
+  }
+}
+
+.icon {
+  margin-right: 7px;
+}
+
+.item-label {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-right: 10px;
+  font-size: 12px;
+}
+
+.count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  background-color: hsla(200, 10%, 50%, 0.2);
+  border-radius: $item-height;
+  min-width: $item-height - 5;
+  height: $item-height - 10;
+
+  font-size: 11px;
+  padding: 0 6px 2px;
 }

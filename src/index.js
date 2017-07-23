@@ -7,6 +7,7 @@ import createStore from 'store'
 import idbKeyval from 'idb-keyval'
 import omit from 'lodash/omit'
 
+import { initialFilterId } from 'store/reducers/filters'
 import App from 'components/App/App'
 
 const STATE_KEY = 'persistedState'
@@ -24,8 +25,13 @@ idbKeyval.get(STATE_KEY).then(persistedState => {
   render(
     <Provider store={store}>
       <Router>
-        <Route path='/:issueId?' render={({ match, history }) => (
-          <App history={history} issueId={match.params.issueId} />
+        <Route path='/:filterId?/:issueId?' render={({ match, history, location }) => (
+          <App
+            location={location}
+            history={history}
+            issueId={match.params.issueId}
+            filterId={match.params.filterId}
+          />
         )} />
       </Router>
     </Provider>,

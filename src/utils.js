@@ -5,6 +5,10 @@ export const mapObject = (object, callback) => (
   Object.keys(object).map(key => callback(key, object[key]))
 )
 
+export const filterObject = (object, callback) => (
+  Object.keys(object).filter(key => callback(key, object[key]))
+)
+
 export const ghRequestAll = ({
   url,
   headers,

@@ -42,6 +42,7 @@
   border-radius: $border-radius;
   margin: 1px;
   -webkit-app-region: no-drag;
+  color: #B2B2B2;
 
   &:after {
     z-index: -1;
@@ -89,6 +90,7 @@
 .button-focused {
   composes: button;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  color: darken(#737373, 5%);
 
   .icon {
     color: #737373;

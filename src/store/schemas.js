@@ -37,7 +37,7 @@ export const issue = new schema.Entity('issues', {
       eventIds: [],
       repository: {
         html_url: issue.repository_url,
-        full_name: `${repo}/${filepath}`,
+        full_name: `${repo}`,
       }
     }
   }

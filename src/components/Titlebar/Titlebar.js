@@ -21,7 +21,7 @@ export const TitlebarButton = ({
     justifyContent='center'
     className={isFocused ? css.buttonFocused : css.button}
   >
-   <Octicon className={css.icon} name={icon} spin={spin} />
+    {icon && <Octicon className={css.icon} name={icon} spin={spin} />}
     {label && <span>{label}</span>}
   </Flex>
 )

@@ -22,11 +22,7 @@ const Comment = ({ compact = false, user, body, updated_at }) => (
           {user.login} commented <TimeAgo date={updated_at} />
         </div>
       </Row>
-    ) : (
-      <div className={css.username}>
-        {user.login} commented <TimeAgo date={updated_at} />
-      </div>
-    )}
+    ) : null}
 
     <GithubFlavoredMarkdown className={css.commentBody} source={body} />
   </Column>
