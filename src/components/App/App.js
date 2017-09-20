@@ -28,7 +28,7 @@ currentWindow.setSheetOffset(38)
 )
 class App extends React.Component {
   state = {
-    columnSizes: [150, 500, null],
+    columnSizes: [200, 500, null],
     isFocused: currentWindow.isFocused(),
   }
 
