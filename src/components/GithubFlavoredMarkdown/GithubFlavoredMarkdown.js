@@ -9,7 +9,7 @@ import './GithubFlavoredMarkdown.scss'
 const md = new MarkdownIt({
   html: true,
   linkify: true,
-  typographer: true
+  typographer: true,
 })
 
 md.use(emojiIt)
@@ -17,19 +17,15 @@ md.use(highlightIt, { auto: true, code: false })
 md.use(taskLists, { enabled: true })
 
 export default class GithubFlavoredMarkdown extends React.Component {
-  render () {
-    const {
-      source,
-      className,
-      ...otherProps
-    } = this.props
+  render() {
+    const { source, className, ...otherProps } = this.props
     return (
       <div
         {...otherProps}
         style={{
-          flexShrink: 0
+          flexShrink: 0,
         }}
-        dangerouslySetInnerHTML={{__html: md.render(source)}}
+        dangerouslySetInnerHTML={{ __html: md.render(source) }}
         className={`${className} markdown-body`}
       />
     )

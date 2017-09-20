@@ -24,91 +24,132 @@ export const fetch = (url, { options, reducerKey, payload = defaultPayload }) =>
   return {
     [CALL_API]: {
       endpoint,
-      ...merge({
-        method: 'GET',
-        headers: ({ user: { token }}) => token ? ({
-          'Accept': 'application/vnd.github.v3+json',
-          'Authorization': `token ${token}`,
-        }) : ({
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        })
-      }, options),
+      ...merge(
+        {
+          method: 'GET',
+          headers: ({ user: { token } }) =>
+            token
+              ? {
+                  Accept: 'application/vnd.github.v3+json',
+                  Authorization: `token ${token}`,
+                }
+              : {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+        },
+        options
+      ),
       types: [
         { type: [reducerKey, 'REQUEST'].join('/'), meta: { uuid } },
         { type: [reducerKey, 'SUCCESS'].join('/'), meta: { uuid }, payload },
         { type: [reducerKey, 'FAILURE'].join('/'), meta: { uuid } },
-      ]
-    }
+      ],
+    },
   }
 }
 
 export const loadNotifications = () => (dispatch, getState) => {
-  dispatch(fetch('notifications?all=true', {
-    reducerKey: 'ENTITIES',
-    payload: (...args) => (
-      defaultPayload(...args).then(notifications => (
-        normalize(notifications, [notificationSchema])
-      ))
-    )
-  }))
+  dispatch(
+    fetch('notifications?all=true', {
+      reducerKey: 'ENTITIES',
+      payload: (...args) =>
+        defaultPayload(...args).then(notifications =>
+          normalize(notifications, [notificationSchema])
+        ),
+    })
+  )
 }
 
 export const bootstrap = token => (dispatch, getState) => {
   dispatch(setToken(token))
 
-  dispatch(fetch('user', { reducerKey: 'USER' }))
-    .then(({ payload: { id, login }}) => {
-      dispatch(refresh())
+  dispatch(fetch('user', { reducerKey: 'USER' })).then(({ payload: { id, login } }) => {
+    dispatch(refresh())
 
-      dispatch(createFilter({ category: 'filter', name: 'Open Issues',    query: { state: 'open', pull_request: { $exists: false } } }))
-      dispatch(createFilter({ category: 'filter', name: 'Open PRs',       query: { state: 'open', pull_request: { $exists: true } } }))
-      dispatch(createFilter({ category: 'filter', name: 'Assigned to me', query: { 'assignees': id } }))
-      dispatch(createFilter({ category: 'filter', name: 'Created by me',  query: { 'user': id } }))
-      dispatch(createFilter({ category: 'filter', name: 'Participating',  query: { $nor: [ {'user': id}, {'assignees': id} ] } }))
-    })
-
+    dispatch(
+      createFilter({
+        category: 'filter',
+        name: 'Open Issues',
+        query: { state: 'open', pull_request: { $exists: false } },
+      })
+    )
+    dispatch(
+      createFilter({
+        category: 'filter',
+        name: 'Open PRs',
+        query: { state: 'open', pull_request: { $exists: true } },
+      })
+    )
+    dispatch(
+      createFilter({
+        category: 'filter',
+        name: 'Assigned to me',
+        query: { assignees: id },
+      })
+    )
+    dispatch(
+      createFilter({
+        category: 'filter',
+        name: 'Created by me',
+        query: { user: id },
+      })
+    )
+    dispatch(
+      createFilter({
+        category: 'filter',
+        name: 'Participating',
+        query: { $nor: [{ user: id }, { assignees: id }] },
+      })
+    )
+  })
 }
 
 export const refresh = () => (dispatch, getState) => {
-  dispatch(loadIssues())
-    .then(({ payload: { entities: { repositories, issues }}}) => (
-      dispatch(batchActions(mapObject(repositories, name => createFilter({
-        name,
-        category: 'repo',
-        query: { repository: name },
-        result: createFilterResult(issues, { repository: name })
-      }))))
-    ))
+  dispatch(loadIssues()).then(({ payload: { entities: { repositories, issues } } }) =>
+    dispatch(
+      batchActions(
+        mapObject(repositories, name =>
+          createFilter({
+            name,
+            category: 'repo',
+            query: { repository: name },
+            result: createFilterResult(issues, { repository: name }),
+          })
+        )
+      )
+    )
+  )
   dispatch(loadNotifications())
 }
 
 export const loadIssues = () => (dispatch, getState) => {
   const uuid = makeUuid()
 
-  dispatch({ type: 'ENTITIES/REQUEST', meta: { uuid }})
+  dispatch({ type: 'ENTITIES/REQUEST', meta: { uuid } })
 
   return ghRequestAll({
     url: `search/issues?q=involves:${getState().user.data.login}`,
     headers: {
       'User-Agent': 'whatsgit',
-      'Accept': 'application/vnd.github.v3+json',
-      'Authorization': `token ${getState().user.token}`,
-    }
-  }).then(issues => (
-    dispatch({
-      type: 'ENTITIES/SUCCESS',
-      payload: normalize(issues, [issueSchema]),
-      meta: { uuid },
-    })
-  ))
-  .catch(e => (
-    dispatch({
-      type: 'ENTITIES/FAILURE',
-      payload: e,
-      meta: { uuid },
-    })
-  ))
+      Accept: 'application/vnd.github.v3+json',
+      Authorization: `token ${getState().user.token}`,
+    },
+  })
+    .then(issues =>
+      dispatch({
+        type: 'ENTITIES/SUCCESS',
+        payload: normalize(issues, [issueSchema]),
+        meta: { uuid },
+      })
+    )
+    .catch(e =>
+      dispatch({
+        type: 'ENTITIES/FAILURE',
+        payload: e,
+        meta: { uuid },
+      })
+    )
 }
 
 export const loadComments = issueId => (dispatch, getState) => {
@@ -117,39 +158,40 @@ export const loadComments = issueId => (dispatch, getState) => {
   const { html_url } = issue
   const { owner, name, filepath } = parseGithubUrl(html_url)
 
-  dispatch({ type: 'ENTITIES/REQUEST', meta: { uuid }})
+  dispatch({ type: 'ENTITIES/REQUEST', meta: { uuid } })
 
   ghRequestAll({
     url: `repos/${owner}/${name}/issues/${filepath}/comments`,
     headers: {
       'User-Agent': 'whatsgit',
-      'Accept': 'application/vnd.github.v3+json',
-      'Authorization': `token ${getState().user.token}`,
+      Accept: 'application/vnd.github.v3+json',
+      Authorization: `token ${getState().user.token}`,
     },
-    mapToResult: item => item
-  }).then(comments => {
-    const { result, entities } = normalize(comments, [commentSchema])
-
-    entities.issues = {
-      [issueId]: {
-        ...issue,
-        commentIds: result
-      }
-    }
-
-    return dispatch({
-      type: 'ENTITIES/SUCCESS',
-      payload: { result, entities },
-      meta: { uuid },
-    })
+    mapToResult: item => item,
   })
-  .catch(e => (
-    dispatch({
-      type: 'ENTITIES/FAILURE',
-      payload: e,
-      meta: { uuid },
+    .then(comments => {
+      const { result, entities } = normalize(comments, [commentSchema])
+
+      entities.issues = {
+        [issueId]: {
+          ...issue,
+          commentIds: result,
+        },
+      }
+
+      return dispatch({
+        type: 'ENTITIES/SUCCESS',
+        payload: { result, entities },
+        meta: { uuid },
+      })
     })
-  ))
+    .catch(e =>
+      dispatch({
+        type: 'ENTITIES/FAILURE',
+        payload: e,
+        meta: { uuid },
+      })
+    )
 }
 
 export const loadIssueEvents = issueId => (dispatch, getState) => {
@@ -158,44 +200,45 @@ export const loadIssueEvents = issueId => (dispatch, getState) => {
   const { html_url } = issue
   const { owner, name, filepath: number } = parseGithubUrl(html_url)
 
-  dispatch({ type: 'ENTITIES/REQUEST', meta: { uuid }})
+  dispatch({ type: 'ENTITIES/REQUEST', meta: { uuid } })
 
   ghRequestAll({
     url: `repos/${owner}/${name}/issues/${number}/events`,
     headers: {
       'User-Agent': 'whatsgit',
-      'Accept': 'application/vnd.github.v3+json',
-      'Authorization': `token ${getState().user.token}`,
+      Accept: 'application/vnd.github.v3+json',
+      Authorization: `token ${getState().user.token}`,
     },
-    mapToResult: item => item
-  }).then(events => {
-    const { result, entities } = normalize(events, [eventSchema])
-
-    entities.issues = {
-      [issueId]: {
-        ...issue,
-        eventIds: result
-      }
-    }
-
-    return dispatch({
-      type: 'ENTITIES/SUCCESS',
-      payload: { result, entities },
-      meta: { uuid },
-    })
+    mapToResult: item => item,
   })
-  .catch(e => (
-    dispatch({
-      type: 'ENTITIES/FAILURE',
-      payload: e,
-      meta: { uuid },
+    .then(events => {
+      const { result, entities } = normalize(events, [eventSchema])
+
+      entities.issues = {
+        [issueId]: {
+          ...issue,
+          eventIds: result,
+        },
+      }
+
+      return dispatch({
+        type: 'ENTITIES/SUCCESS',
+        payload: { result, entities },
+        meta: { uuid },
+      })
     })
-  ))
+    .catch(e =>
+      dispatch({
+        type: 'ENTITIES/FAILURE',
+        payload: e,
+        meta: { uuid },
+      })
+    )
 }
 
 const setToken = token => ({
   type: 'USER/SET_TOKEN',
-  payload: token
+  payload: token,
 })
 
 export const createFilter = filter => ({
@@ -204,7 +247,7 @@ export const createFilter = filter => ({
     id: makeUuid(),
     result: null,
     ...filter,
-  }
+  },
 })
 
 const createFilterResult = (issues, query) => {
@@ -220,14 +263,14 @@ export const refreshFilter = id => (dispatch, getState) => {
   if (result.length) {
     return dispatch({
       type: 'FILTERS/UPDATE_RESULT',
-      payload: { id, result }
+      payload: { id, result },
     })
   }
 }
 
 export const logout = navigate => dispatch => {
   dispatch({
-    type: 'RESET'
+    type: 'RESET',
   })
   navigate('/')
 }

@@ -11,28 +11,27 @@ import { initialFilterId } from 'store/reducers/filters'
 import App from 'components/App/App'
 
 const STATE_KEY = 'persistedState'
-const BLACKLISTED_KEYS = [
-  'requests'
-]
+const BLACKLISTED_KEYS = ['requests']
 
 idbKeyval.get(STATE_KEY).then(persistedState => {
   const store = createStore(persistedState)
 
-  store.subscribe(() => (
-    idbKeyval.set(STATE_KEY, omit(store.getState(), BLACKLISTED_KEYS))
-  ))
+  store.subscribe(() => idbKeyval.set(STATE_KEY, omit(store.getState(), BLACKLISTED_KEYS)))
 
   render(
     <Provider store={store}>
       <Router>
-        <Route path='/:filterId?/:issueId?' render={({ match, history, location }) => (
-          <App
-            location={location}
-            history={history}
-            issueId={match.params.issueId}
-            filterId={match.params.filterId}
-          />
-        )} />
+        <Route
+          path="/:filterId?/:issueId?"
+          render={({ match, history, location }) => (
+            <App
+              location={location}
+              history={history}
+              issueId={match.params.issueId}
+              filterId={match.params.filterId}
+            />
+          )}
+        />
       </Router>
     </Provider>,
     document.querySelector('#app')

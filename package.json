@@ -5,6 +5,14 @@
   "description": "Describe nwb-electron-starter here",
   "main": "dist/index.js",
   "private": true,
+  "prettier": {
+    "print-width": 100,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "semi": false,
+    "jsxBracketSameLine": false,
+    "bracketSpacing": true
+  },
   "scripts": {
     "build": "nwb build && babel main -d dist && npm run package",
     "watch-electron-main": "babel main -d dist -w",
@@ -13,7 +21,8 @@
     "server": "node dev-server.js --run-electron",
     "test": "nwb test",
     "test:watch": "nwb test --server",
-    "package": "rm -rf ./release && electron-packager --icon icon-1024.icns --overwrite --asar='true' --ignore='src|main|tests' --prune --platform=darwin --arch=x64 --out='release' ."
+    "package":
+      "rm -rf ./release && electron-packager --icon icon-1024.icns --overwrite --asar='true' --ignore='src|main|tests' --prune --platform=darwin --arch=x64 --out='release' ."
   },
   "dependencies": {
     "component-directory-webpack-plugin": "^1.0.5",

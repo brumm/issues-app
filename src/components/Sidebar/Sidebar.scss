@@ -3,7 +3,7 @@ $item-height: 28px;
 .container {
   padding: 0 0 10px 0;
   font-size: 14px;
-  background-color: #F6F6F6;
+  background-color: #f6f6f6;
   overflow-y: auto;
 }
 .container-focused {
@@ -14,7 +14,7 @@ $item-height: 28px;
 .group-label {
   height: $item-height;
   padding: 5px 10px;
-  color: #9DAAB9;
+  color: #9daab9;
   letter-spacing: 0.5px;
   font-size: 10px;
   text-transform: uppercase;
@@ -29,10 +29,10 @@ $item-height: 28px;
 
 .item-selected {
   composes: item;
-  background-color: #9FAAB8;
+  background-color: #9faab8;
 
   .count {
-    background-color: #5C6877;
+    background-color: #5c6877;
     color: #fff;
   }
 }

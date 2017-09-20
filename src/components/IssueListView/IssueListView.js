@@ -17,7 +17,7 @@ import css from './IssueListView.scss'
 
 @withRouter
 @connect(({ entities }, { user }) => ({
-  user: entities.users[user]
+  user: entities.users[user],
 }))
 class ListItem extends React.Component {
   render() {
@@ -47,35 +47,31 @@ class ListItem extends React.Component {
         className={[css.item, state].join(' ')}
         activeClassName={css.itemSelected}
       >
-        <Flex className={css.repo} alignItems='center'>
+        <Flex className={css.repo} alignItems="center">
           {unread && <div className={css.unreadMarker} />}
 
           {shortName}
 
-          {comments > 0 &&
-            <Flex className={css.commentCount} alignItems='center'>
-              <Octicon name='comment' />
+          {comments > 0 && (
+            <Flex className={css.commentCount} alignItems="center">
+              <Octicon name="comment" />
               {comments}
             </Flex>
-          }
+          )}
         </Flex>
 
-        <Row className={css.title} alignItems='baseline'>
-          <Octicon name={
-            pull_request !== undefined
-            ? 'git-pull-request'
-              : state === 'closed'
-                ? 'issue-closed'
-                : 'issue-opened'
-          } />
+        <Row className={css.title} alignItems="baseline">
+          <Octicon
+            name={
+              pull_request !== undefined
+                ? 'git-pull-request'
+                : state === 'closed' ? 'issue-closed' : 'issue-opened'
+            }
+          />
           {title}
         </Row>
 
-        {truncatedBody.length > 0 &&
-          <div className={css.body}>
-            {truncatedBody}
-          </div>
-        }
+        {truncatedBody.length > 0 && <div className={css.body}>{truncatedBody}</div>}
       </NavLink>
     )
   }
@@ -83,20 +79,14 @@ class ListItem extends React.Component {
 
 @withRouter
 export default class IssueListView extends React.Component {
-
   cache = new CellMeasurerCache({
     fixedWidth: true,
     minHeight: 80,
-    keyMapper: rowIndex => this.props.issues[rowIndex].id
+    keyMapper: rowIndex => this.props.issues[rowIndex].id,
   })
 
-
   render() {
-    const {
-      issues,
-      notifications,
-      match,
-    } = this.props
+    const { issues, notifications, match } = this.props
 
     if (!match.params.issueId) {
       return <Redirect to={`/${match.params.filterId}/${issues[0].id}`} />
@@ -120,11 +110,7 @@ export default class IssueListView extends React.Component {
                 rowIndex={index}
                 parent={parent}
               >
-                <ListItem
-                  key={key}
-                  style={style}
-                  {...issues[index]}
-                />
+                <ListItem key={key} style={style} {...issues[index]} />
               </CellMeasurer>
             )}
             width={width}

@@ -1,9 +1,4 @@
-import {
-  createStore,
-  combineReducers,
-  applyMiddleware,
-  compose,
-} from 'redux'
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { apiMiddleware } from 'redux-api-middleware'
 import thunk from 'redux-thunk'
 
@@ -30,7 +25,7 @@ export default initialState => {
   Object.defineProperty(window, 'store', {
     get() {
       return store.getState()
-    }
+    },
   })
 
   return store

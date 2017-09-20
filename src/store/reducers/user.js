@@ -10,7 +10,7 @@ export default function user(state = initialState, action) {
     case 'USER/SET_TOKEN':
       return {
         ...state,
-        token: action.payload
+        token: action.payload,
       }
 
     case 'USER/REQUEST':
@@ -18,7 +18,7 @@ export default function user(state = initialState, action) {
         ...state,
         loading: true,
         error: false,
-        data: action.payload
+        data: action.payload,
       }
 
     case 'USER/SUCCESS':
@@ -26,7 +26,7 @@ export default function user(state = initialState, action) {
         ...state,
         loading: false,
         error: false,
-        data: action.payload
+        data: action.payload,
       }
 
     case 'USER/FAILURE':
@@ -38,7 +38,7 @@ export default function user(state = initialState, action) {
 
     case 'RESET':
       return initialState
-      break;
+      break
 
     default:
       return state

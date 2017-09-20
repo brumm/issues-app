@@ -15,9 +15,7 @@ import Loading from 'components/Loading'
 
 import css from './IssueDetailView.scss'
 
-@connect(({
-  entities
-}, { issueId }) => {
+@connect(({ entities }, { issueId }) => {
   const issue = entities.issues[issueId]
   return {
     issue,
@@ -27,9 +25,7 @@ import css from './IssueDetailView.scss'
     author: entities.users[issue.user],
   }
 }, actionCreators)
-
 export default class IssueDetailView extends React.Component {
-
   componentDidMount() {
     this.loadComments(this.props.issue.id)
   }
@@ -49,16 +45,9 @@ export default class IssueDetailView extends React.Component {
     }, 1000)
   }
 
-  render () {
+  render() {
     const {
-      issue: {
-        title,
-        url,
-        html_url,
-        number,
-        body,
-        shortName,
-      },
+      issue: { title, url, html_url, number, body, shortName },
       author,
       comments,
       events,
@@ -66,14 +55,13 @@ export default class IssueDetailView extends React.Component {
       isLoading,
     } = this.props
 
-    const commentsAndEvents = [
-      ...comments,
-      ...events,
-    ].sort((a, b) => Date.parse(a.created_at) < Date.parse(b.created_at) ? -1 : 1)
+    const commentsAndEvents = [...comments, ...events].sort(
+      (a, b) => (Date.parse(a.created_at) < Date.parse(b.created_at) ? -1 : 1)
+    )
 
     return (
       <Column style={{ height: '100%' }} className={css.container}>
-        <Row alignItems='flex-start' className={css.header} shrink={0}>
+        <Row alignItems="flex-start" className={css.header} shrink={0}>
           <UserBadge size={50} radius={3} avatar={author.avatar_url} />
 
           <Column className={css.details}>
@@ -85,16 +73,15 @@ export default class IssueDetailView extends React.Component {
 
             <Row className={css.labels}>
               {labels.map(({ id, name, color: [backgroundColor, color] }) => (
-                <div key={id}
-                  className={css.label}
-                  style={{ backgroundColor, color }}
-                >{name}</div>
+                <div key={id} className={css.label} style={{ backgroundColor, color }}>
+                  {name}
+                </div>
               ))}
             </Row>
           </Column>
         </Row>
 
-        <Column grow={1} style={{overflowY: 'auto'}}>
+        <Column grow={1} style={{ overflowY: 'auto' }}>
           {body && <GithubFlavoredMarkdown className={css.issueBody} source={body} />}
           {commentsAndEvents.length === 0 ? (
             isLoading && (
@@ -107,18 +94,23 @@ export default class IssueDetailView extends React.Component {
               {commentsAndEvents.map((commentOrEvent, index) => {
                 if (commentOrEvent.actor !== undefined) {
                   const previousEvent = commentsAndEvents[index - 1]
-                  const isConsecutive = previousEvent && previousEvent.actor === commentOrEvent.actor
-                  return <Event compact={isConsecutive} key={commentOrEvent.id} {...commentOrEvent} />
+                  const isConsecutive =
+                    previousEvent && previousEvent.actor === commentOrEvent.actor
+                  return (
+                    <Event compact={isConsecutive} key={commentOrEvent.id} {...commentOrEvent} />
+                  )
                 } else {
                   const previousComment = commentsAndEvents[index - 1]
-                  const isConsecutive = previousComment && previousComment.user === commentOrEvent.user
-                  return <Comment compact={isConsecutive} key={commentOrEvent.id} {...commentOrEvent} />
+                  const isConsecutive =
+                    previousComment && previousComment.user === commentOrEvent.user
+                  return (
+                    <Comment compact={isConsecutive} key={commentOrEvent.id} {...commentOrEvent} />
+                  )
                 }
               })}
             </Column>
           )}
         </Column>
-
       </Column>
     )
   }

@@ -10,34 +10,30 @@ const initialState = {
   },
 }
 
-export default enableBatching((
-  state = initialState,
-  action
-) => {
+export default enableBatching((state = initialState, action) => {
   switch (action.type) {
     case 'FILTERS/CREATE':
       return {
         ...state,
-        [action.payload.id]: action.payload
+        [action.payload.id]: action.payload,
       }
-      break;
+      break
 
     case 'FILTERS/UPDATE_RESULT':
       return {
         ...state,
         [action.payload.id]: {
           ...state[action.payload.id],
-          result: action.payload.result
-        }
+          result: action.payload.result,
+        },
       }
-      break;
+      break
 
     case 'RESET':
       return initialState
-      break;
+      break
 
     default:
       return state
   }
-}
-)
+})

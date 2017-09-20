@@ -10,21 +10,15 @@ const initialState = {
   events: {},
 }
 
-export default (
-  state = initialState,
-  action
-) => {
+export default (state = initialState, action) => {
   switch (action.type) {
     case 'ENTITIES/SUCCESS':
-      return merge({},
-        state,
-        action.payload.entities
-      )
-      break;
+      return merge({}, state, action.payload.entities)
+      break
 
     case 'RESET':
       return initialState
-      break;
+      break
 
     default:
       return state

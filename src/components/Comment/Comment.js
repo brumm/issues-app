@@ -9,13 +9,13 @@ import GithubFlavoredMarkdown from 'components/GithubFlavoredMarkdown/GithubFlav
 import css from './Comment.scss'
 
 const mapStateToProps = ({ entities }, { user: userId }) => ({
-  user: entities.users[userId]
+  user: entities.users[userId],
 })
 
 const Comment = ({ compact = false, user, body, updated_at }) => (
   <Column className={css.container} shrink={0} style={{ marginTop: compact ? -3 : null }}>
     {compact === false ? (
-      <Row className={css.header} shrink={0} alignItems='center' grow={1}>
+      <Row className={css.header} shrink={0} alignItems="center" grow={1}>
         <UserBadge size={28} radius={3} avatar={user.avatar_url} />
 
         <div className={css.username}>

@@ -26,9 +26,15 @@ $body-line-height: 17px;
     margin-top: 6px;
   }
 
-  &:global(.open)   .title :global(.octicon) { color: #28a745; }
-  &:global(.closed) .title :global(.octicon) { color: #cb2431; }
-  &:global(.merged) .title :global(.octicon) { color: #6f42c1; }
+  &:global(.open) .title :global(.octicon) {
+    color: #28a745;
+  }
+  &:global(.closed) .title :global(.octicon) {
+    color: #cb2431;
+  }
+  &:global(.merged) .title :global(.octicon) {
+    color: #6f42c1;
+  }
 
   .repo {
     font-size: 12px;
@@ -88,9 +94,10 @@ $body-line-height: 17px;
 
 .item-selected {
   composes: item;
-  background-color: #7FA5CF;
+  background-color: #7fa5cf;
 
-  &, & + .item {
+  &,
+  & + .item {
     border-top-color: #fff !important;
   }
 
@@ -98,7 +105,9 @@ $body-line-height: 17px;
     box-shadow: 0 1px 0 #fff;
   }
 
-  &, .repo, .title {
+  &,
+  .repo,
+  .title {
     color: #fff;
   }
 
@@ -111,7 +120,13 @@ $body-line-height: 17px;
     color: #cbdced;
   }
 
-  &:global(.open)   .title :global(.octicon) { color: #fff; }
-  &:global(.closed) .title :global(.octicon) { color: #fff; }
-  &:global(.merged) .title :global(.octicon) { color: #fff; }
+  &:global(.open) .title :global(.octicon) {
+    color: #fff;
+  }
+  &:global(.closed) .title :global(.octicon) {
+    color: #fff;
+  }
+  &:global(.merged) .title :global(.octicon) {
+    color: #fff;
+  }
 }

@@ -15,21 +15,16 @@ import IssueListView from 'components/IssueListView/IssueListView'
 import IssueDetailView from 'components/IssueDetailView/IssueDetailView'
 import Loading from 'components/Loading'
 
-@connect(({
-  entities,
-  filters,
-}, {
-  filterId
-}) => ({
-  notifications: entities.notifications,
-  issues: Object.keys(entities.issues).length === 0
-    ? false
-    : entities.issues,
-  groupedFilters: groupBy(mapObject(filters, (id, filter) => ({ ...filter, id })), 'category'),
-  activeFilter: filters[filterId],
-}), actionCreators)
+@connect(
+  ({ entities, filters }, { filterId }) => ({
+    notifications: entities.notifications,
+    issues: Object.keys(entities.issues).length === 0 ? false : entities.issues,
+    groupedFilters: groupBy(mapObject(filters, (id, filter) => ({ ...filter, id })), 'category'),
+    activeFilter: filters[filterId],
+  }),
+  actionCreators
+)
 export default class InboxPage extends React.Component {
-
   componentWillUpdate(nextProps) {
     this.maybeRefreshFilter(nextProps)
   }
@@ -41,11 +36,7 @@ export default class InboxPage extends React.Component {
     this.maybeRefreshFilter(this.props)
   }
 
-  maybeRefreshFilter({
-    activeFilter,
-    filterId,
-    refreshFilter,
-  }) {
+  maybeRefreshFilter({ activeFilter, filterId, refreshFilter }) {
     if (activeFilter.result === null) {
       refreshFilter(filterId)
     }
@@ -68,7 +59,7 @@ export default class InboxPage extends React.Component {
 
     filteredIssues = mapObject(filteredIssues, (id, issue) => ({
       ...issue,
-      unread: !!(notifications[issue.shortName] && notifications[issue.shortName].unread)
+      unread: !!(notifications[issue.shortName] && notifications[issue.shortName].unread),
     }))
 
     filteredIssues = sortBy(filteredIssues, [
@@ -78,7 +69,6 @@ export default class InboxPage extends React.Component {
       ({ created_at }) => Date.parse(created_at).valueOf(),
     ]).reverse()
 
-
     return (
       <Row grow={1}>
         <SplitLayout
@@ -86,24 +76,18 @@ export default class InboxPage extends React.Component {
           onChange={onColumnResize}
           initialSizes={columnSizes}
           minSizes={[100, 300, 100, 100]}
-          maxSizes={[400, (window.innerWidth / 3) * 2, null]}
+          maxSizes={[400, window.innerWidth / 3 * 2, null]}
           dividerColor={['rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)']}
           style={{
             position: 'relative',
             height: null,
           }}
         >
-          <Sidebar
-            isFocused={isFocused}
-            groups={groupedFilters}
-          />
+          <Sidebar isFocused={isFocused} groups={groupedFilters} />
 
           {!isEmpty(filteredIssues) ? (
             <Column style={{ width: '100%', height: '100%' }}>
-              <IssueListView
-                issues={filteredIssues}
-                notifications={notifications}
-              />
+              <IssueListView issues={filteredIssues} notifications={notifications} />
             </Column>
           ) : (
             <Center style={{ backgroundColor: '#fff' }}>
@@ -114,9 +98,7 @@ export default class InboxPage extends React.Component {
           {issueId ? (
             <IssueDetailView isLoading={isLoading} issueId={issueId} />
           ) : (
-            <Center style={{ backgroundColor: '#E9EFF4' }}>
-              No Issue Selected
-            </Center>
+            <Center style={{ backgroundColor: '#E9EFF4' }}>No Issue Selected</Center>
           )}
         </SplitLayout>
       </Row>

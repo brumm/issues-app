@@ -72,7 +72,8 @@
 
   .markdown-body {
     font-size: 16px;
-    font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: 'Helvetica Neue', Helvetica, 'Segoe UI', Arial, freesans, sans-serif,
+      'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
     line-height: 1.6;
     word-wrap: break-word;
 
@@ -140,7 +141,7 @@
       line-height: normal;
     }
 
-    input[type="checkbox"] {
+    input[type='checkbox'] {
       padding: 0;
     }
 
@@ -155,7 +156,8 @@
     }
 
     input {
-      font: 13px / 1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      font: 13px / 1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
     }
 
     a {
@@ -179,13 +181,13 @@
 
     hr:before {
       display: table;
-      content: "";
+      content: '';
     }
 
     hr:after {
       display: table;
       clear: both;
-      content: "";
+      content: '';
     }
 
     h1,
@@ -257,14 +259,14 @@
     }
 
     code {
-      font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
       font-size: 12px;
     }
 
     pre {
       margin-top: 0;
       margin-bottom: 0;
-      font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      font: 12px Consolas, 'Liberation Mono', Menlo, Courier, monospace;
       overflow-x: auto;
     }
 
@@ -291,13 +293,13 @@
 
     .markdown-body:before {
       display: table;
-      content: "";
+      content: '';
     }
 
     .markdown-body:after {
       display: table;
       clear: both;
-      content: "";
+      content: '';
     }
 
     .markdown-body > *:first-child {
@@ -524,14 +526,14 @@
       padding: 0.2em 0;
       margin: 0;
       font-size: 85%;
-      background-color: rgba(0,0,0,0.04);
+      background-color: rgba(0, 0, 0, 0.04);
       border-radius: 3px;
     }
 
     code:after,
     code:before {
       letter-spacing: -0.2em;
-      content: "\00a0";
+      content: '\00a0';
     }
 
     pre > code {
@@ -700,7 +702,7 @@
     kbd {
       display: inline-block;
       padding: 3px 5px;
-      font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      font: 11px Consolas, 'Liberation Mono', Menlo, Courier, monospace;
       line-height: 10px;
       color: #555;
       vertical-align: middle;
@@ -715,7 +717,7 @@
       list-style-type: none;
     }
 
-    .task-list-item+.task-list-item {
+    .task-list-item + .task-list-item {
       margin-top: 3px;
     }
 
@@ -724,7 +726,7 @@
       vertical-align: middle;
     }
 
-    :checked+.radio-label {
+    :checked + .radio-label {
       z-index: 1;
       position: relative;
       border-color: #4078c0;

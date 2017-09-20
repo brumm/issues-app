@@ -18,22 +18,18 @@ import style from './App.scss'
 const currentWindow = remote.getCurrentWindow()
 currentWindow.setSheetOffset(38)
 
-@connect(({
-  user,
-  requests,
-  filters,
-}, {
-  filterId
-}) => ({
-  user,
-  isLoading: !!requests.length,
-  initialFilterId: filterId || Object.keys(filters)[0]
-}), actionCreators)
-
+@connect(
+  ({ user, requests, filters }, { filterId }) => ({
+    user,
+    isLoading: !!requests.length,
+    initialFilterId: filterId || Object.keys(filters)[0],
+  }),
+  actionCreators
+)
 class App extends React.Component {
   state = {
     columnSizes: [150, 500, null],
-    isFocused: currentWindow.isFocused()
+    isFocused: currentWindow.isFocused(),
   }
 
   componentWillMount() {
@@ -45,9 +41,9 @@ class App extends React.Component {
     currentWindow.removeAllListeners()
   }
 
-  onColumnResize = (columnSizes) => this.setState({ columnSizes })
+  onColumnResize = columnSizes => this.setState({ columnSizes })
 
-  render () {
+  render() {
     const {
       issueId,
       filterId,
@@ -61,10 +57,7 @@ class App extends React.Component {
       initialFilterId,
     } = this.props
 
-    const {
-      columnSizes,
-      isFocused,
-    } = this.state
+    const { columnSizes, isFocused } = this.state
 
     return (
       <Column className={style.container}>
@@ -72,38 +65,44 @@ class App extends React.Component {
           isFocused={isFocused}
           columnSizes={columnSizes}
           left={null}
-          center={
-            user.token && <TitlebarButton isFocused={isFocused} icon='pencil' />
+          center={user.token && <TitlebarButton isFocused={isFocused} icon="pencil" />}
+          right={
+            user.token && (
+              <Row>
+                <TitlebarButton
+                  isFocused={isFocused}
+                  icon="sync"
+                  onClick={refresh}
+                  spin={isLoading}
+                />
+                <TitlebarButton
+                  isFocused={isFocused}
+                  icon="sign-out"
+                  onClick={() => logout(history.replace)}
+                />
+              </Row>
+            )
           }
-          right={user.token && (
-            <Row>
-              <TitlebarButton isFocused={isFocused} icon='sync' onClick={refresh} spin={isLoading} />
-              <TitlebarButton isFocused={isFocused} icon='sign-out' onClick={() => logout(history.replace) } />
-            </Row>
-          )}
         />
 
-        {do {
-          if (!user.token) {
-            <LoginPage
-              currentWindow={currentWindow}
-              onGetToken={token => bootstrap(token)}
-            />
+        {
+          do {
+            if (!user.token) {
+              ;<LoginPage currentWindow={currentWindow} onGetToken={token => bootstrap(token)} />
+            } else if (!filterId) {
+              ;<Redirect to={`/${initialFilterId}`} />
+            } else if (user.data) {
+              ;<InboxPage
+                isLoading={isLoading}
+                isFocused={isFocused}
+                columnSizes={columnSizes}
+                onColumnResize={this.onColumnResize}
+                issueId={issueId}
+                filterId={filterId}
+              />
+            }
           }
-          else if (!filterId) {
-            <Redirect to={`/${initialFilterId}`} />
-          }
-          else if (user.data) {
-            <InboxPage
-              isLoading={isLoading}
-              isFocused={isFocused}
-              columnSizes={columnSizes}
-              onColumnResize={this.onColumnResize}
-              issueId={issueId}
-              filterId={filterId}
-            />
-          }
-        }}
+        }
       </Column>
     )
   }

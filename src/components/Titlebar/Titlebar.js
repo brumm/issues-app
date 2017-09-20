@@ -6,19 +6,12 @@ import { Row } from 'components/Layout'
 
 import css from './Titlebar.scss'
 
-export const TitlebarButton = ({
-  active,
-  icon,
-  label,
-  spin,
-  isFocused,
-  ...props,
-}) => (
+export const TitlebarButton = ({ active, icon, label, spin, isFocused, ...props }) => (
   <Flex
     {...props}
-    tagName='button'
-    alignItems='center'
-    justifyContent='center'
+    tagName="button"
+    alignItems="center"
+    justifyContent="center"
     className={isFocused ? css.buttonFocused : css.button}
   >
     {icon && <Octicon className={css.icon} name={icon} spin={spin} />}
@@ -26,27 +19,25 @@ export const TitlebarButton = ({
   </Flex>
 )
 
-export default ({
-  left,
-  center,
-  right,
-  isFocused,
-  columnSizes: [leftWidth, centerWidth],
-}) => (
+export default ({ left, center, right, isFocused, columnSizes: [leftWidth, centerWidth] }) => (
   <Row
     className={isFocused ? css.containerFocused : css.container}
-    justifyContent='center'
+    justifyContent="center"
     shrink={0}
   >
-    <Row justifyContent='flex-end' className={css.itemContainer} style={{ paddingLeft: 78, width: leftWidth }}>
+    <Row
+      justifyContent="flex-end"
+      className={css.itemContainer}
+      style={{ paddingLeft: 78, width: leftWidth }}
+    >
       {left}
     </Row>
 
-    <Row justifyContent='flex-start' className={css.itemContainer} style={{ width: centerWidth }}>
+    <Row justifyContent="flex-start" className={css.itemContainer} style={{ width: centerWidth }}>
       {center}
     </Row>
 
-    <Row className={css.itemContainer} justifyContent='flex-end' grow={1}>
+    <Row className={css.itemContainer} justifyContent="flex-end" grow={1}>
       {right}
     </Row>
   </Row>

@@ -7,10 +7,10 @@
  */
 class InvalidRSAA extends Error {
   constructor(validationErrors) {
-    super();
-    this.name = 'InvalidRSAA';
-    this.message = 'Invalid RSAA';
-    this.validationErrors = validationErrors;
+    super()
+    this.name = 'InvalidRSAA'
+    this.message = 'Invalid RSAA'
+    this.validationErrors = validationErrors
   }
 }
 
@@ -23,9 +23,9 @@ class InvalidRSAA extends Error {
  */
 class InternalError extends Error {
   constructor(message) {
-    super();
-    this.name = 'InternalError';
-    this.message = message;
+    super()
+    this.name = 'InternalError'
+    this.message = message
   }
 }
 
@@ -38,9 +38,9 @@ class InternalError extends Error {
  */
 class RequestError extends Error {
   constructor(message) {
-    super();
-    this.name = 'RequestError';
-    this.message = message;
+    super()
+    this.name = 'RequestError'
+    this.message = message
   }
 }
 
@@ -56,13 +56,13 @@ class RequestError extends Error {
  */
 class ApiError extends Error {
   constructor(status, statusText, response) {
-    super();
-    this.name = 'ApiError';
-    this.status = status;
-    this.statusText = statusText;
-    this.response = response;
-    this.message = `${status} - ${statusText}`;
+    super()
+    this.name = 'ApiError'
+    this.status = status
+    this.statusText = statusText
+    this.response = response
+    this.message = `${status} - ${statusText}`
   }
 }
 
-export { InvalidRSAA, InternalError, RequestError, ApiError };
+export { InvalidRSAA, InternalError, RequestError, ApiError }

@@ -19,47 +19,46 @@ const ICON_MAP = {
 @withRouter
 @connect(({ user }) => ({ user }))
 export default class Sidebar extends React.Component {
-  render () {
-    const {
-      groups,
-      user,
-      isFocused,
-    } = this.props
+  render() {
+    const { groups, user, isFocused } = this.props
 
     return (
       <Column>
         <Column className={isFocused ? css.containerFocused : css.container} grow={1}>
           {user.data && (
-            <UserBadge avatar={user.data.avatar_url} radius={3} name={user.data.login} containerStyle={{ padding: 10 }} />
+            <UserBadge
+              avatar={user.data.avatar_url}
+              radius={3}
+              name={user.data.login}
+              containerStyle={{ padding: 10 }}
+            />
           )}
           {mapObject(groups, (groupLabel, items) => (
             <Column shrink={0} key={groupLabel}>
-              <Row alignItems='flex-end' className={css.groupLabel} shrink={0}>
+              <Row alignItems="flex-end" className={css.groupLabel} shrink={0}>
                 {groupLabel}
               </Row>
 
-              {mapObject(sortBy(items, 'result.length').reverse(), (_, { id, name, result, category }) => (
-                <NavLink
-                  to={`/${id}`}
-                  key={id}
-                  className={css.item}
-                  activeClassName={css.itemSelected}
+              {mapObject(
+                sortBy(items, 'result.length').reverse(),
+                (_, { id, name, result, category }) => (
+                  <NavLink
+                    to={`/${id}`}
+                    key={id}
+                    className={css.item}
+                    activeClassName={css.itemSelected}
                   >
                     <Octicon name={ICON_MAP[category]} className={css.icon} />
-                    <div className={css.itemLabel}>
-                      {name}
-                    </div>
-                    {result !== null && result.length !== 0 &&
-                      <div className={css.count}>
-                        {result.length}
-                      </div>
-                    }
+                    <div className={css.itemLabel}>{name}</div>
+                    {result !== null &&
+                      result.length !== 0 && <div className={css.count}>{result.length}</div>}
                   </NavLink>
-                ))}
-              </Column>
-            ))}
-          </Column>
-          {/* <Row style={{ height: 28, padding: '0 10px' }} alignItems='center' justifyContent='flex-end' shrink={0}>
+                )
+              )}
+            </Column>
+          ))}
+        </Column>
+        {/* <Row style={{ height: 28, padding: '0 10px' }} alignItems='center' justifyContent='flex-end' shrink={0}>
             Lol
           </Row> */}
       </Column>
