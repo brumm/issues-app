@@ -65,62 +65,40 @@ export const bootstrap = token => (dispatch, getState) => {
   dispatch(setToken(token))
 
   dispatch(fetch('user', { reducerKey: 'USER' })).then(({ payload: { id, login } }) => {
-    dispatch(refresh())
+    // prettier-ignore
+    dispatch( createFilter({ category: 'filter', name: 'Open Issues', query: { state: 'open', pull_request: { $exists: false } }, }) )
+    // prettier-ignore
+    dispatch( createFilter({ category: 'filter', name: 'Open PRs', query: { state: 'open', pull_request: { $exists: true } }, }) )
+    // prettier-ignore
+    dispatch( createFilter({ category: 'filter', name: 'Assigned to me', query: { assignees: id }, }) )
+    // prettier-ignore
+    dispatch( createFilter({ category: 'filter', name: 'Created by me', query: { user: id }, }) )
+    // prettier-ignore
+    dispatch( createFilter({ category: 'filter', name: 'Participating', query: { $nor: [{ user: id }, { assignees: id }] }, }) )
 
-    dispatch(
-      createFilter({
-        category: 'filter',
-        name: 'Open Issues',
-        query: { state: 'open', pull_request: { $exists: false } },
-      })
-    )
-    dispatch(
-      createFilter({
-        category: 'filter',
-        name: 'Open PRs',
-        query: { state: 'open', pull_request: { $exists: true } },
-      })
-    )
-    dispatch(
-      createFilter({
-        category: 'filter',
-        name: 'Assigned to me',
-        query: { assignees: id },
-      })
-    )
-    dispatch(
-      createFilter({
-        category: 'filter',
-        name: 'Created by me',
-        query: { user: id },
-      })
-    )
-    dispatch(
-      createFilter({
-        category: 'filter',
-        name: 'Participating',
-        query: { $nor: [{ user: id }, { assignees: id }] },
-      })
-    )
+    dispatch(loadNotifications())
+    dispatch(loadIssues()).then(({ payload: { entities: { repositories, issues } } }) => {
+      dispatch(
+        batchActions(
+          mapObject(repositories, name =>
+            createFilter({
+              name,
+              category: 'repo',
+              query: { repository: name },
+            })
+          )
+        )
+      )
+
+      dispatch(refreshFilters())
+    })
   })
 }
 
 export const refresh = () => (dispatch, getState) => {
-  dispatch(loadIssues()).then(({ payload: { entities: { repositories, issues } } }) =>
-    dispatch(
-      batchActions(
-        mapObject(repositories, name =>
-          createFilter({
-            name,
-            category: 'repo',
-            query: { repository: name },
-            result: createFilterResult(issues, { repository: name }),
-          })
-        )
-      )
-    )
-  )
+  dispatch(loadIssues())
   dispatch(loadNotifications())
+  dispatch(refreshFilters())
 }
 
 export const loadIssues = () => (dispatch, getState) => {
@@ -266,6 +244,25 @@ export const refreshFilter = id => (dispatch, getState) => {
       payload: { id, result },
     })
   }
+}
+
+export const refreshFilters = () => (dispatch, getState) => {
+  const { filters } = getState()
+  const { issues } = getState().entities
+
+  dispatch(
+    batchActions(
+      mapObject(filters, (id, { query }) => {
+        const result = createFilterResult(issues, query)
+        if (result.length) {
+          return {
+            type: 'FILTERS/UPDATE_RESULT',
+            payload: { id, result },
+          }
+        }
+      }).filter(Boolean)
+    )
+  )
 }
 
 export const logout = navigate => dispatch => {
