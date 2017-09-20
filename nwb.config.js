@@ -1,43 +1,33 @@
-const path = require('path');
-const webpack = require('webpack');
-const package = require('./package.json');
-// const ComponentDirectoryPlugin = require('component-directory-webpack-plugin');
-
-const cssConfig = {
-  options: {
-    modules: true,
-    localIdentName: '[local]-[hash:base64:10]',
-    camelCase: true
-  }
-}
+const path = require('path')
+const webpack = require('webpack')
+const package = require('./package.json')
 
 module.exports = {
   type: 'react-app',
-
   webpack: {
     extra: {
       resolve: {
-        // plugins: [new ComponentDirectoryPlugin()],
         modules: [path.resolve('./src'), 'node_modules'],
-        extensions: ['.scss']
+        extensions: ['.scss'],
       },
-      output: {
-        publicPath: ''
-      },
-      target: 'electron-renderer'
+      target: 'electron-renderer',
     },
     uglify: false,
     html: {
       template: path.resolve('./src/index.html'),
-      title: package.name
+      title: package.name,
     },
     rules: {
-      'css': cssConfig,
-      'sass-css': cssConfig
-    }
+      'sass-css': {
+        options: {
+          modules: true,
+          localIdentName: '[local]-[hash:base64:10]',
+          camelCase: true,
+        },
+      },
+    },
   },
-
   babel: {
-    stage: 0
-  }
+    stage: 0,
+  },
 }
