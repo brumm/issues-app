@@ -86,13 +86,14 @@ class App extends React.Component {
         />
 
         {
+          // prettier-ignore
           do {
             if (!user.token) {
-              ;<LoginPage currentWindow={currentWindow} onGetToken={token => bootstrap(token)} />
+              <LoginPage currentWindow={currentWindow} onGetToken={token => bootstrap(token)} />
             } else if (!filterId) {
-              ;<Redirect to={`/${initialFilterId}`} />
+              <Redirect to={`/${initialFilterId}`} />
             } else if (user.data) {
-              ;<InboxPage
+              <InboxPage
                 isLoading={isLoading}
                 isFocused={isFocused}
                 columnSizes={columnSizes}
