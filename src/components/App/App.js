@@ -29,12 +29,11 @@ currentWindow.setSheetOffset(38)
 class App extends React.Component {
   state = {
     columnSizes: [200, 500, null],
-    isFocused: currentWindow.isFocused(),
   }
 
   componentWillMount() {
-    currentWindow.on('focus', () => this.setState({ isFocused: true }))
-    currentWindow.on('blur', () => this.setState({ isFocused: false }))
+    currentWindow.on('focus', () => document.body.classList.remove('window-inactive'))
+    currentWindow.on('blur', () => document.body.classList.add('window-inactive'))
   }
 
   componentWillUnmount() {
@@ -57,29 +56,19 @@ class App extends React.Component {
       initialFilterId,
     } = this.props
 
-    const { columnSizes, isFocused } = this.state
+    const { columnSizes } = this.state
 
     return (
       <Column className={style.container}>
         <Titlebar
-          isFocused={isFocused}
           columnSizes={columnSizes}
           left={null}
-          center={user.token && <TitlebarButton isFocused={isFocused} icon="pencil" />}
+          center={user.token && <TitlebarButton icon="pencil" />}
           right={
             user.token && (
               <Row>
-                <TitlebarButton
-                  isFocused={isFocused}
-                  icon="sync"
-                  onClick={refresh}
-                  spin={isLoading}
-                />
-                <TitlebarButton
-                  isFocused={isFocused}
-                  icon="sign-out"
-                  onClick={() => logout(history.replace)}
-                />
+                <TitlebarButton icon="sync" onClick={refresh} spin={isLoading} />
+                <TitlebarButton icon="sign-out" onClick={() => logout(history.replace)} />
               </Row>
             )
           }
@@ -95,7 +84,6 @@ class App extends React.Component {
             } else if (user.data) {
               <InboxPage
                 isLoading={isLoading}
-                isFocused={isFocused}
                 columnSizes={columnSizes}
                 onColumnResize={this.onColumnResize}
                 issueId={issueId}

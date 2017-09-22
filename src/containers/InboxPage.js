@@ -49,7 +49,6 @@ export default class InboxPage extends React.Component {
       notifications,
       columnSizes,
       onColumnResize,
-      isFocused,
       isLoading,
       groupedFilters,
       activeFilter,
@@ -83,7 +82,7 @@ export default class InboxPage extends React.Component {
             height: null,
           }}
         >
-          <Sidebar isFocused={isFocused} groups={groupedFilters} />
+          <Sidebar groups={groupedFilters} />
 
           {!isEmpty(filteredIssues) ? (
             <Column style={{ width: '100%', height: '100%' }}>

@@ -3,12 +3,12 @@ $item-height: 28px;
 .container {
   padding: 0 0 10px 0;
   font-size: 14px;
-  background-color: #f6f6f6;
-  overflow-y: auto;
-}
-.container-focused {
-  composes: container;
   background-color: transparent;
+  overflow-y: auto;
+
+  [class^='window-inactive'] & {
+    background-color: #f6f6f6;
+  }
 }
 
 .group-label {

@@ -20,11 +20,11 @@ const ICON_MAP = {
 @connect(({ user }) => ({ user }))
 export default class Sidebar extends React.Component {
   render() {
-    const { groups, user, isFocused } = this.props
+    const { groups, user } = this.props
 
     return (
       <Column>
-        <Column className={isFocused ? css.containerFocused : css.container} grow={1}>
+        <Column className={css.container} grow={1}>
           {user.data && (
             <UserBadge
               avatar={user.data.avatar_url}

@@ -6,25 +6,21 @@ import { Row } from 'components/Layout'
 
 import css from './Titlebar.scss'
 
-export const TitlebarButton = ({ active, icon, label, spin, isFocused, ...props }) => (
+export const TitlebarButton = ({ active, icon, label, spin, ...props }) => (
   <Flex
     {...props}
     tagName="button"
     alignItems="center"
     justifyContent="center"
-    className={isFocused ? css.buttonFocused : css.button}
+    className={css.button}
   >
     {icon && <Octicon className={css.icon} name={icon} spin={spin} />}
     {label && <span>{label}</span>}
   </Flex>
 )
 
-export default ({ left, center, right, isFocused, columnSizes: [leftWidth, centerWidth] }) => (
-  <Row
-    className={isFocused ? css.containerFocused : css.container}
-    justifyContent="center"
-    shrink={0}
-  >
+export default ({ left, center, right, columnSizes: [leftWidth, centerWidth] }) => (
+  <Row className={css.container} justifyContent="center" shrink={0}>
     <Row
       justifyContent="flex-end"
       className={css.itemContainer}
