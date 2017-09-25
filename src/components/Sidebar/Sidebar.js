@@ -23,44 +23,41 @@ export default class Sidebar extends React.Component {
     const { groups, user } = this.props
 
     return (
-      <Column>
-        <Column className={css.container} grow={1}>
-          {user.data && (
-            <UserBadge
-              avatar={user.data.avatar_url}
-              radius={3}
-              name={user.data.login}
-              containerStyle={{ padding: 10 }}
-            />
-          )}
-          {mapObject(groups, (groupLabel, items) => (
-            <Column shrink={0} key={groupLabel}>
-              <Row alignItems="flex-end" className={css.groupLabel} shrink={0}>
-                {groupLabel}
-              </Row>
+      <Column className={css.container} grow={1}>
+        {user.data && (
+          <UserBadge
+            avatar={user.data.avatar_url}
+            radius={3}
+            name={user.data.login}
+            containerStyle={{ padding: 10 }}
+          />
+        )}
+        {mapObject(groups, (groupLabel, items) => (
+          <Column shrink={0} key={groupLabel}>
+            <Row alignItems="flex-end" className={css.groupLabel} shrink={0}>
+              {groupLabel}
+            </Row>
 
-              {mapObject(
-                sortBy(items, 'result.length').reverse(),
-                (_, { id, name, result, category }) => (
-                  <NavLink
-                    to={`/${id}`}
-                    key={id}
-                    className={css.item}
-                    activeClassName={css.itemSelected}
-                  >
-                    <Octicon name={ICON_MAP[category]} className={css.icon} />
-                    <div className={css.itemLabel}>{name}</div>
-                    {result !== null &&
-                      result.length !== 0 && <div className={css.count}>{result.length}</div>}
-                  </NavLink>
-                )
-              )}
-            </Column>
-          ))}
-        </Column>
-        {/* <Row style={{ height: 28, padding: '0 10px' }} alignItems='center' justifyContent='flex-end' shrink={0}>
-            Lol
-          </Row> */}
+            {mapObject(
+              sortBy(items, 'result.length').reverse(),
+              (_, { id, name, result, category }) => (
+                <NavLink
+                  to={`/${id}`}
+                  key={id}
+                  className={css.item}
+                  activeClassName={css.itemSelected}
+                >
+                  <Octicon name={ICON_MAP[category]} className={css.icon} />
+                  <div className={css.itemLabel}>{name}</div>
+                  {result !== null &&
+                  result.length !== 0 && (
+                    <div className={css.count}>{result.length}</div>
+                  )}
+                </NavLink>
+              )
+            )}
+          </Column>
+        ))}
       </Column>
     )
   }
