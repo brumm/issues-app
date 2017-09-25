@@ -50,9 +50,7 @@ export default class Sidebar extends React.Component {
                   <Octicon name={ICON_MAP[category]} className={css.icon} />
                   <div className={css.itemLabel}>{name}</div>
                   {result !== null &&
-                  result.length !== 0 && (
-                    <div className={css.count}>{result.length}</div>
-                  )}
+                    result.length !== 0 && <div className={css.count}>{result.length}</div>}
                 </NavLink>
               )
             )}

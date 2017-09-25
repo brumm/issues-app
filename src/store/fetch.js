@@ -4,10 +4,7 @@ import { CALL_API, getJSON } from 'redux-api-middleware'
 
 export const defaultPayload = (action, state, res) => getJSON(res)
 
-export const fetch = (
-  url,
-  { options, reducerKey, payload = defaultPayload }
-) => {
+export const fetch = (url, { options, reducerKey, payload = defaultPayload }) => {
   const uuid = makeUuid()
   const endpoint = `https://api.github.com/${url}`
 
