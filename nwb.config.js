@@ -11,6 +11,9 @@ module.exports = {
         extensions: ['.scss'],
       },
       target: 'electron-renderer',
+      output: {
+        publicPath: ''
+      }
     },
     uglify: false,
     html: {
