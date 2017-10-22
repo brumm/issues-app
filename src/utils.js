@@ -1,3 +1,5 @@
+import makeUuid from 'uuid/v4'
+import { normalize } from 'normalizr'
 import parseLinkHeader from 'parse-link-header'
 import tinycolor from 'tinycolor2'
 
@@ -7,7 +9,7 @@ export const mapObject = (object, callback) =>
 export const filterObject = (object, callback) =>
   Object.keys(object).filter(key => callback(key, object[key]))
 
-export const ghRequestAll = ({ url, headers, mapToResult = ({ items }) => items }) => {
+export const ghRequestAll = ({ url, headers, mapToResult = item => item }) => {
   url = new URL(`https://api.github.com/${url}`)
   url.searchParams.set('page', 1)
   url.searchParams.set('per_page', 100)
@@ -32,6 +34,38 @@ export const ghRequestAll = ({ url, headers, mapToResult = ({ items }) => items 
       }),
     ]).then(([...items]) => [].concat(...items))
   })
+}
+
+export const fetchAll = (
+  url,
+  { token, dispatch, schema, mutateEntities = stuff => stuff, mapToResult }
+) => {
+  const uuid = makeUuid()
+  dispatch({ type: 'ENTITIES/REQUEST', meta: { uuid } })
+  return ghRequestAll({
+    url,
+    headers: {
+      'User-Agent': 'whatsgit',
+      Accept: 'application/vnd.github.v3+json',
+      Authorization: `token ${token}`,
+    },
+    mapToResult,
+  })
+    .then(response => {
+      const { result, entities } = normalize(response, [schema])
+      return dispatch({
+        type: 'ENTITIES/SUCCESS',
+        payload: { result, entities: mutateEntities(entities, result) },
+        meta: { uuid },
+      })
+    })
+    .catch(e =>
+      dispatch({
+        type: 'ENTITIES/FAILURE',
+        payload: e,
+        meta: { uuid },
+      })
+    )
 }
 
 export const getReadableColor = (hex, options) => {

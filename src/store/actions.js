@@ -1,6 +1,6 @@
 import makeUuid from 'uuid/v4'
 import { normalize } from 'normalizr'
-import { filterObject, ghRequestAll } from 'utils'
+import { filterObject, fetchAll } from 'utils'
 import parseGithubUrl from 'parse-github-url'
 import qry from 'qry'
 import { mapObject } from 'utils'
@@ -55,7 +55,6 @@ export const bootstrap = token => (dispatch, getState) => {
           )
         )
       )
-
       dispatch(refreshFilters())
     })
   })
@@ -72,147 +71,62 @@ export const refresh = () => (dispatch, getState) => {
   })
 }
 
-export const loadIssues = () => (dispatch, getState) => {
-  const uuid = makeUuid()
-
-  dispatch({ type: 'ENTITIES/REQUEST', meta: { uuid } })
-
-  return ghRequestAll({
-    url: `search/issues?q=involves:${getState().user.data.login}`,
-    headers: {
-      'User-Agent': 'whatsgit',
-      Accept: 'application/vnd.github.v3+json',
-      Authorization: `token ${getState().user.token}`,
-    },
+export const loadIssues = () => (dispatch, getState) =>
+  fetchAll(`search/issues?q=involves:${getState().user.data.login}`, {
+    token: getState().user.token,
+    schema: issueSchema,
+    mapToResult: ({ items }) => items,
+    // dispatch: console.log,
+    dispatch,
   })
-    .then(issues =>
-      dispatch({
-        type: 'ENTITIES/SUCCESS',
-        payload: normalize(issues, [issueSchema]),
-        meta: { uuid },
-      })
-    )
-    .catch(e =>
-      dispatch({
-        type: 'ENTITIES/FAILURE',
-        payload: e,
-        meta: { uuid },
-      })
-    )
-}
 
-export const loadUserRepos = () => (dispatch, getState) => {
-  const uuid = makeUuid()
-
-  dispatch({ type: 'ENTITIES/REQUEST', meta: { uuid } })
-
-  return ghRequestAll({
-    url: `user/repos?type=all`,
-    headers: {
-      'User-Agent': 'whatsgit',
-      Accept: 'application/vnd.github.v3+json',
-      Authorization: `token ${getState().user.token}`,
-    },
-    mapToResult: item => item,
+export const loadUserRepos = () => (dispatch, getState) =>
+  fetchAll(`user/repos?type=all`, {
+    token: getState().user.token,
+    schema: repositorySchema,
+    dispatch,
   })
-    .then(repositories =>
-      dispatch({
-        type: 'ENTITIES/SUCCESS',
-        payload: normalize(repositories, [repositorySchema]),
-        meta: { uuid },
-      })
-    )
-    .catch(e =>
-      dispatch({
-        type: 'ENTITIES/FAILURE',
-        payload: e,
-        meta: { uuid },
-      })
-    )
-}
 
 export const loadComments = issueId => (dispatch, getState) => {
-  const uuid = makeUuid()
   const issue = getState().entities.issues[issueId]
   const { html_url } = issue
   const { owner, name, filepath } = parseGithubUrl(html_url)
 
-  dispatch({ type: 'ENTITIES/REQUEST', meta: { uuid } })
-
-  ghRequestAll({
-    url: `repos/${owner}/${name}/issues/${filepath}/comments`,
-    headers: {
-      'User-Agent': 'whatsgit',
-      Accept: 'application/vnd.github.v3+json',
-      Authorization: `token ${getState().user.token}`,
-    },
-    mapToResult: item => item,
-  })
-    .then(comments => {
-      const { result, entities } = normalize(comments, [commentSchema])
-
-      entities.issues = {
+  return fetchAll(`repos/${owner}/${name}/issues/${filepath}/comments`, {
+    mutateEntities: (entities, result) => ({
+      ...entities,
+      issues: {
         [issueId]: {
           ...issue,
           commentIds: result,
         },
-      }
-
-      return dispatch({
-        type: 'ENTITIES/SUCCESS',
-        payload: { result, entities },
-        meta: { uuid },
-      })
-    })
-    .catch(e =>
-      dispatch({
-        type: 'ENTITIES/FAILURE',
-        payload: e,
-        meta: { uuid },
-      })
-    )
+      },
+    }),
+    token: getState().user.token,
+    schema: commentSchema,
+    dispatch,
+  })
 }
 
 export const loadIssueEvents = issueId => (dispatch, getState) => {
-  const uuid = makeUuid()
   const issue = getState().entities.issues[issueId]
   const { html_url } = issue
   const { owner, name, filepath: number } = parseGithubUrl(html_url)
 
-  dispatch({ type: 'ENTITIES/REQUEST', meta: { uuid } })
-
-  ghRequestAll({
-    url: `repos/${owner}/${name}/issues/${number}/events`,
-    headers: {
-      'User-Agent': 'whatsgit',
-      Accept: 'application/vnd.github.v3+json',
-      Authorization: `token ${getState().user.token}`,
-    },
-    mapToResult: item => item,
-  })
-    .then(events => {
-      const { result, entities } = normalize(events, [eventSchema])
-
-      entities.issues = {
+  return fetchAll(`repos/${owner}/${name}/issues/${number}/events`, {
+    mutateEntities: (entities, result) => ({
+      ...entities,
+      issues: {
         [issueId]: {
           ...issue,
           eventIds: result,
         },
-      }
-
-      return dispatch({
-        type: 'ENTITIES/SUCCESS',
-        payload: { result, entities },
-        meta: { uuid },
-      })
-    })
-    .catch(e =>
-      dispatch({
-        type: 'ENTITIES/FAILURE',
-        payload: e,
-        meta: { uuid },
-      })
-    )
+      },
+    }),
+    token: getState().user.token,
+    schema: eventSchema,
+    dispatch,
+  })
 }
 
 const setToken = token => ({
