@@ -33,6 +33,7 @@ export default class InboxPage extends React.Component {
     if (this.props.issues === false) {
       this.props.loadIssues()
     }
+    this.props.refresh()
     this.maybeRefreshFilter(this.props)
   }
 
