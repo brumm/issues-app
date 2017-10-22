@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import parseGithubUrl from 'parse-github-url'
 import groupBy from 'lodash/groupBy'
+import TimeAgo from 'react-timeago'
 
 import { actionCreators } from 'store'
 
@@ -10,7 +11,7 @@ import UserBadge from 'components/UserBadge'
 import Comment from 'components/Comment/Comment'
 import Event from 'components/Event/Event'
 import GithubFlavoredMarkdown from 'components/GithubFlavoredMarkdown/GithubFlavoredMarkdown'
-import ExternalLink from 'components/ExternalLink'
+import ExternalLink from 'components/ExternalLink/ExternalLink'
 import Loading from 'components/Loading'
 
 import css from './IssueDetailView.scss'
@@ -47,7 +48,7 @@ export default class IssueDetailView extends React.Component {
 
   render() {
     const {
-      issue: { title, url, html_url, number, body, shortName },
+      issue: { title, url, html_url, number, body, shortName, created_at },
       author,
       comments,
       events,
@@ -65,9 +66,12 @@ export default class IssueDetailView extends React.Component {
           <UserBadge size={50} radius={3} avatar={author.avatar_url} />
 
           <Column className={css.details}>
-            <ExternalLink url={html_url}>
-              <div className={css.link}>{shortName}</div>
-            </ExternalLink>
+            <Row className={css.subtle}>
+              <ExternalLink url={html_url}>{shortName}</ExternalLink>
+              <div style={{ marginLeft: 'auto' }}>
+                {author.login} commented <TimeAgo date={created_at} />
+              </div>
+            </Row>
 
             <div className={css.title}>{title}</div>
 
