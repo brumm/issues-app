@@ -12,11 +12,12 @@ import {
   comment as commentSchema,
   notification as notificationSchema,
   event as eventSchema,
+  repository as repositorySchema,
 } from './schemas'
 
 export const loadNotifications = () => (dispatch, getState) => {
   dispatch(
-    fetch('notifications?all=true', {
+    fetch('notifications?all=1', {
       reducerKey: 'ENTITIES',
       payload: (...args) =>
         defaultPayload(...args).then(notifications =>
@@ -61,9 +62,14 @@ export const bootstrap = token => (dispatch, getState) => {
 }
 
 export const refresh = () => (dispatch, getState) => {
-  dispatch(loadIssues())
   dispatch(loadNotifications())
-  dispatch(refreshFilters())
+  // prettier-ignore
+  Promise.all([
+    dispatch(loadIssues()),
+    dispatch(loadUserRepos())
+  ]).then(() => {
+    dispatch(refreshFilters())
+  })
 }
 
 export const loadIssues = () => (dispatch, getState) => {
@@ -83,6 +89,36 @@ export const loadIssues = () => (dispatch, getState) => {
       dispatch({
         type: 'ENTITIES/SUCCESS',
         payload: normalize(issues, [issueSchema]),
+        meta: { uuid },
+      })
+    )
+    .catch(e =>
+      dispatch({
+        type: 'ENTITIES/FAILURE',
+        payload: e,
+        meta: { uuid },
+      })
+    )
+}
+
+export const loadUserRepos = () => (dispatch, getState) => {
+  const uuid = makeUuid()
+
+  dispatch({ type: 'ENTITIES/REQUEST', meta: { uuid } })
+
+  return ghRequestAll({
+    url: `user/repos?type=all`,
+    headers: {
+      'User-Agent': 'whatsgit',
+      Accept: 'application/vnd.github.v3+json',
+      Authorization: `token ${getState().user.token}`,
+    },
+    mapToResult: item => item,
+  })
+    .then(repositories =>
+      dispatch({
+        type: 'ENTITIES/SUCCESS',
+        payload: normalize(repositories, [repositorySchema]),
         meta: { uuid },
       })
     )

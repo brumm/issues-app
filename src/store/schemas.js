@@ -16,7 +16,7 @@ const label = new schema.Entity(
   }
 )
 
-const repository = new schema.Entity(
+export const repository = new schema.Entity(
   'repositories',
   {
     owner: user,
