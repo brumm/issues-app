@@ -30,13 +30,13 @@ export const fetch = (url, { options, reducerKey, payload = defaultPayload }) =>
         options
       ),
       types: [
-        { type: [reducerKey, 'REQUEST'].join('/'), meta: { uuid } },
+        { type: `${reducerKey}/REQUEST`, meta: { uuid } },
         {
-          type: [reducerKey, 'SUCCESS'].join('/'),
+          type: `${reducerKey}/SUCCESS`,
           meta: { uuid },
           payload,
         },
-        { type: [reducerKey, 'FAILURE'].join('/'), meta: { uuid } },
+        { type: `${reducerKey}/FAILURE`, meta: { uuid } },
       ],
     },
   }
