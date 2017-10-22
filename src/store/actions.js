@@ -43,18 +43,16 @@ export const bootstrap = token => (dispatch, getState) => {
     dispatch( createFilter({ category: 'filter', name: 'Participating', query: { $nor: [{ user: id }, { assignees: id }] }, }) )
 
     dispatch(loadNotifications())
-    dispatch(loadIssues()).then(({ payload: { entities: { repositories, issues } } }) => {
-      dispatch(
-        batchActions(
-          mapObject(repositories, name =>
-            createFilter({
-              name,
-              category: 'repo',
-              query: { repository: name },
-            })
-          )
-        )
+    Promise.all([dispatch(loadIssues()), dispatch(loadUserRepos())]).then(() => {
+      const { repositories } = getState().entities
+      const createRepoFilterActions = mapObject(repositories, (name, { permissions }) =>
+        createFilter({
+          name,
+          category: permissions ? 'member' : 'repo',
+          query: { repository: name },
+        })
       )
+      dispatch(batchActions(createRepoFilterActions))
       dispatch(refreshFilters())
     })
   })
