@@ -85,7 +85,6 @@ $body-line-height: 17px;
     font-size: 13px;
     line-height: $body-line-height;
     max-height: calc(#{$body-line-height} * #{$visible-body-lines});
-    overflow: hidden;
     word-break: break-word;
     padding-bottom: 3px;
     box-sizing: content-box;

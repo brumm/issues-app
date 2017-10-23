@@ -1,6 +1,5 @@
 .container {
   margin: 5px;
-  overflow: hidden;
   border-bottom: 1px solid #d9e0e6;
   background-color: #fff;
 }
@@ -17,7 +16,6 @@
 }
 
 .body {
-  overflow: hidden;
   flex-shrink: 0;
   padding: 10px;
   border-top: 1px solid #e8e8e8;

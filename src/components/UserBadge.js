@@ -8,7 +8,6 @@ const UserBadge = ({ avatar, name, radius, size = 20, style, containerStyle }) =
         borderRadius: radius || size,
         width: size,
         height: size,
-        overflow: 'hidden',
         marginRight: name ? 5 : null,
         ...style,
       }}
