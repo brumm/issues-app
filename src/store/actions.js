@@ -27,8 +27,13 @@ export const loadNotifications = () => (dispatch, getState) => {
   )
 }
 
+export const loadEmojis = () => (dispatch, getState) => {
+  dispatch(fetch('emojis', { reducerKey: 'EMOJIS' }))
+}
+
 export const bootstrap = token => (dispatch, getState) => {
   dispatch(setToken(token))
+  dispatch(loadEmojis())
 
   dispatch(fetch('user', { reducerKey: 'USER' })).then(({ payload: { id, login } }) => {
     // prettier-ignore

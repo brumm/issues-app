@@ -46,7 +46,7 @@ export const fetchAll = (
     url,
     headers: {
       'User-Agent': 'whatsgit',
-      Accept: 'application/vnd.github.v3+json',
+      Accept: ' application/vnd.github.squirrel-girl-preview',
       Authorization: `token ${token}`,
     },
     mapToResult,

@@ -13,6 +13,7 @@ import Event from 'components/Event/Event'
 import GithubFlavoredMarkdown from 'components/GithubFlavoredMarkdown/GithubFlavoredMarkdown'
 import ExternalLink from 'components/ExternalLink/ExternalLink'
 import Loading from 'components/Loading'
+import Reactions from 'components/Reactions/Reactions'
 
 import css from './IssueDetailView.scss'
 
@@ -48,7 +49,7 @@ export default class IssueDetailView extends React.Component {
 
   render() {
     const {
-      issue: { title, url, html_url, number, body, shortName, created_at },
+      issue: { title, url, html_url, number, body, shortName, created_at, reactions },
       author,
       comments,
       events,
@@ -56,6 +57,7 @@ export default class IssueDetailView extends React.Component {
       isLoading,
     } = this.props
 
+    const hasReactions = reactions.total_count > 0
     const commentsAndEvents = [...comments, ...events].sort(
       (a, b) => (Date.parse(a.created_at) < Date.parse(b.created_at) ? -1 : 1)
     )
@@ -86,7 +88,10 @@ export default class IssueDetailView extends React.Component {
         </Row>
 
         <Column grow={1} style={{ overflowY: 'auto' }}>
-          {body && <GithubFlavoredMarkdown className={css.issueBody} source={body} />}
+          <Column shrink={0} className={css.issueBodyContainer}>
+            {body && <GithubFlavoredMarkdown source={body} className={css.issueBody} />}
+            {hasReactions && <Reactions reactions={reactions} />}
+          </Column>
           {commentsAndEvents.length === 0 ? (
             isLoading && (
               <Center>

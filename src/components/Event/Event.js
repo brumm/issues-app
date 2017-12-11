@@ -61,14 +61,14 @@ export default class Event extends React.Component {
     let eventFormatter = events[this.props.event]
 
     return eventFormatter ? (
-      <Row className={css.container} alignItems="center" justifyContent="space-between">
+      <Row className={css.container} alignItems="center">
         <Row alignItems="center">
           {!this.props.compact && <Octicon name="primitive-dot" />}
           <div style={{ marginLeft: this.props.compact ? 22 : 5 }}>
             {eventFormatter(this.props)}
           </div>
         </Row>
-        <TimeAgo style={{ color: '#bcc7d1' }} date={this.props.created_at} />
+        <TimeAgo style={{ color: '#bcc7d1', marginLeft: 5 }} date={this.props.created_at} />
       </Row>
     ) : null
   }

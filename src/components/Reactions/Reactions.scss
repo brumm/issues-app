@@ -1,0 +1,33 @@
+$size: 20px;
+
+.container {
+  position: absolute;
+  right: 20px;
+  bottom: -7px;
+  background-color: #fff;
+  border-radius: $size;
+  // prettier-ignore
+  box-shadow:
+    -1px 1px 0 #D9E0E6,
+    1px 1px 0 #D9E0E6,
+    0 1px 0 #D9E0E6;
+}
+
+.emoji {
+  width: $size;
+  min-height: $size;
+
+  & + & {
+    margin-left: 10px;
+  }
+}
+
+.reaction {
+  padding: 5px 10px;
+  color: #9d9d9d;
+
+  & + & {
+    border-left: 1px solid #d9e0e6;
+    padding-left: 10px;
+  }
+}

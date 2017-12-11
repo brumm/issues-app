@@ -21,7 +21,7 @@
     "server": "node dev-server.js --run-electron",
     "test": "nwb test",
     "test:watch": "nwb test --server",
-    "package": "rm -rf ./release && electron-packager --icon icon-1024.icns --overwrite --asar='true' --ignore='src|main|tests' --prune --platform=darwin --arch=x64 --out='release' ."
+    "package": "rm -rf ./release && electron-packager --icon icon-1024.icns --overwrite --asar --ignore='src|main|tests' --prune --platform=darwin --arch=x64 --out='release' ."
   },
   "dependencies": {
     "electron-devtools-installer": "^2.2.1",

@@ -18,7 +18,8 @@ export const fetch = (url, { options, reducerKey, payload = defaultPayload }) =>
             token
               ? {
                   'User-Agent': 'whatsgit',
-                  Accept: 'application/vnd.github.v3+json',
+                  // Accept: 'application/vnd.github.v3+json',
+                  Accept: ' application/vnd.github.squirrel-girl-preview',
                   Authorization: `token ${token}`,
                 }
               : {
