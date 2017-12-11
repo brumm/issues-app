@@ -1,8 +1,8 @@
 {
-  "name": "nwb-electron-starter",
+  "name": "issues",
   "productName": "Issues",
   "version": "1.0.0",
-  "description": "Describe nwb-electron-starter here",
+  "description": "Because you got issues",
   "main": "dist/index.js",
   "private": true,
   "prettier": {
