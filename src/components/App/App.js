@@ -78,7 +78,7 @@ class App extends React.Component {
           // prettier-ignore
           do {
             if (!user.token) {
-              <LoginPage currentWindow={currentWindow} onGetToken={token => bootstrap(token)} />
+              <LoginPage onGetToken={token => bootstrap(token)} />
             } else if (!filterId) {
               <Redirect to={`/${initialFilterId}`} />
             } else if (user.data) {

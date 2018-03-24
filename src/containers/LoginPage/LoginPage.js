@@ -1,7 +1,6 @@
 import React from 'react'
 import Octicon from 'react-octicon'
 
-import startGithubAuth from 'github-auth-window'
 import { Row, Center } from 'components/Layout'
 import Loading from 'components/Loading'
 
@@ -12,12 +11,26 @@ export default class LoginPage extends React.Component {
     clicked: false,
   }
 
-  onClick = () => {
-    const { currentWindow, onGetToken } = this.props
+  handleCallback = url => {
+    const { onGetToken } = this.props
+    let regex = /token=([a-z0-9]+$)/
+    if (regex.test(url)) {
+      let [match, token] = url.match(regex)
+      if (match) {
+        onGetToken(token)
+      }
+    }
+  }
 
-    this.setState({ clicked: true }, () => {
-      startGithubAuth(currentWindow).then(onGetToken)
-    })
+  handleRef = webview => {
+    if (webview) {
+      webview.addEventListener('will-navigate', ({ url }) => {
+        this.handleCallback(url)
+      })
+      webview.addEventListener('did-get-redirect-request', ({ newURL }) => {
+        this.handleCallback(newURL)
+      })
+    }
   }
 
   render() {
@@ -25,24 +38,26 @@ export default class LoginPage extends React.Component {
 
     return (
       <Center>
-        <Row
-          tagName="button"
-          disabled={clicked}
-          alignItems="center"
-          onClick={this.onClick}
-          className={css.button}
-        >
-          {clicked ? (
-            <Loading />
-          ) : (
-            [
-              <Octicon key="foo" className={css.icon} name="mark-github" />,
-              <div key="bar" className={css.label}>
-                Login with Github
-              </div>,
-            ]
-          )}
-        </Row>
+        {clicked ? (
+          <webview
+            style={{ width: '100%', height: '100%' }}
+            src="http://whatsgit-auth.apps.railslabs.com/login"
+            ref={this.handleRef}
+          />
+        ) : (
+          <Row
+            tagName="button"
+            disabled={clicked}
+            alignItems="center"
+            onClick={this.onClick}
+            className={css.button}
+          >
+            <Octicon key="foo" className={css.icon} name="mark-github" />
+            <div key="bar" className={css.label}>
+              Login with Github
+            </div>
+          </Row>
+        )}
       </Center>
     )
   }
