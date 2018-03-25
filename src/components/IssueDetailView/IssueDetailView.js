@@ -88,7 +88,11 @@ export default class IssueDetailView extends React.Component {
         </Row>
 
         <Column grow={1} style={{ overflowY: 'auto' }}>
-          <Column shrink={0} className={css.issueBodyContainer}>
+          <Column
+            shrink={0}
+            className={css.issueBodyContainer}
+            style={{ minHeight: hasReactions ? 30 : 0 }}
+          >
             {body && <GithubFlavoredMarkdown source={body} className={css.issueBody} />}
             {hasReactions && <Reactions reactions={reactions} />}
           </Column>
