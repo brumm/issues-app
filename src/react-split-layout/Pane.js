@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import PropTypes from 'prop-types'
 
 export default class Pane extends React.Component {
   constructor(props, context) {
@@ -49,9 +49,9 @@ export default class Pane extends React.Component {
 }
 
 Pane.propTypes = {
-  direction: React.PropTypes.string,
-  grow: React.PropTypes.number,
-  initialSize: React.PropTypes.number,
+  direction: PropTypes.string,
+  grow: PropTypes.number,
+  initialSize: PropTypes.number,
 }
 Pane.defaultProps = {
   direction: 'vertical',

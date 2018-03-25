@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import PropTypes from 'prop-types'
 
 import Pane from './Pane'
 import Divider from './Divider'
@@ -80,7 +81,10 @@ export default class SplitLayout extends React.Component {
               color={this.props.dividerColor[index]}
               style={this.props.dividerStyle}
               direction={direction}
-              onMouseDown={this.createOnMouseDownWithKey(`pane-${index}`, index)}
+              onMouseDown={this.createOnMouseDownWithKey(
+                `pane-${index}`,
+                index
+              )}
             />
           )}
           {child}
@@ -96,7 +100,8 @@ export default class SplitLayout extends React.Component {
     return event => {
       const ref = this.refs[key]
       const node = ReactDOM.findDOMNode(ref)
-      const position = this.props.direction === 'vertical' ? event.clientX : event.clientY
+      const position =
+        this.props.direction === 'vertical' ? event.clientX : event.clientY
       this.setState({
         active: true,
         index: index,
@@ -112,8 +117,11 @@ export default class SplitLayout extends React.Component {
       return
     }
     const minEdgePosition =
-      this.props.direction === 'vertical' ? this.state.node.offsetLeft : this.state.node.offsetTop
-    const currentPosition = this.props.direction === 'vertical' ? event.clientX : event.clientY
+      this.props.direction === 'vertical'
+        ? this.state.node.offsetLeft
+        : this.state.node.offsetTop
+    const currentPosition =
+      this.props.direction === 'vertical' ? event.clientX : event.clientY
     const size = currentPosition - minEdgePosition
     const index = this.state.index
     const minSize = this.props.minSizes[index]
@@ -140,7 +148,13 @@ export default class SplitLayout extends React.Component {
   styles() {
     const direction = this.props.direction
     const draggingStyles = this.state.active ? styles.dragging : {}
-    return Object.assign({}, styles.base, styles[direction], draggingStyles, this.props.style)
+    return Object.assign(
+      {},
+      styles.base,
+      styles[direction],
+      draggingStyles,
+      this.props.style
+    )
   }
 }
 
@@ -166,15 +180,15 @@ function validateNullOrNumberArray(props, propName, componentName) {
 }
 
 SplitLayout.propTypes = {
-  direction: React.PropTypes.string,
-  dividerColor: React.PropTypes.array,
-  style: React.PropTypes.object,
-  paneStyle: React.PropTypes.object,
-  dividerStyle: React.PropTypes.object,
+  direction: PropTypes.string,
+  dividerColor: PropTypes.array,
+  style: PropTypes.object,
+  paneStyle: PropTypes.object,
+  dividerStyle: PropTypes.object,
   initialSizes: validateNullOrNumberArray,
   minSizes: validateNullOrNumberArray,
   maxSizes: validateNullOrNumberArray,
-  onChange: React.PropTypes.func,
+  onChange: PropTypes.func,
 }
 
 SplitLayout.defaultProps = {

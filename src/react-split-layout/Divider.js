@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 class Divider extends React.Component {
   render() {
@@ -51,8 +52,8 @@ const styles = {
 }
 
 Divider.propTypes = {
-  direction: React.PropTypes.string,
-  color: React.PropTypes.string,
+  direction: PropTypes.string,
+  color: PropTypes.string,
 }
 
 Divider.defaultProps = {

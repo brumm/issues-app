@@ -1,8 +1,8 @@
 import React from 'react'
-import Loader from 'halogen/MoonLoader'
+import Spinner from 'react-svg-spinner'
 
 export default props => (
-  <Loader
+  <Spinner
     {...{
       ...props,
       color: 'rgba(0, 0, 0, 0.3)',

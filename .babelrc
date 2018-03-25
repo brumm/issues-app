@@ -1,4 +1,13 @@
 {
-  "presets": ["es2015", "stage-0"],
-  "plugins": ["transform-do-expressions"]
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "browsers": ["last 2 Electron versions"]
+        }
+      }
+    ]
+  ],
+  "plugins": ["transform-do-expressions", "transform-decorators-legacy"]
 }

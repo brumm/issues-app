@@ -49,7 +49,11 @@ export default class LoginPage extends React.Component {
             tagName="button"
             disabled={clicked}
             alignItems="center"
-            onClick={this.onClick}
+            onClick={() =>
+              this.setState({
+                clicked: true,
+              })
+            }
             className={css.button}
           >
             <Octicon key="foo" className={css.icon} name="mark-github" />
