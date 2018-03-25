@@ -30,23 +30,13 @@ const Group = ({ label, items, onToggle, isCollapsed }) => (
 
     {!isCollapsed &&
       mapObject(
-        sortBy(
-          items.filter(({ result }) => result && result.length),
-          'result.length'
-        ).reverse(),
+        sortBy(items.filter(({ result }) => result && result.length), 'result.length').reverse(),
         (_, { id, name, result, category }) => (
-          <NavLink
-            to={`/${id}`}
-            key={id}
-            className={css.item}
-            activeClassName={css.itemSelected}
-          >
+          <NavLink to={`/${id}`} key={id} className={css.item} activeClassName={css.itemSelected}>
             <Octicon name={ICON_MAP[category]} className={css.icon} />
             <div className={css.itemLabel}>{name}</div>
             {result !== null &&
-              result.length !== 0 && (
-                <div className={css.count}>{result.length}</div>
-              )}
+              result.length !== 0 && <div className={css.count}>{result.length}</div>}
           </NavLink>
         )
       )}

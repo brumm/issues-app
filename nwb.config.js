@@ -12,8 +12,8 @@ module.exports = {
       },
       target: 'electron-renderer',
       output: {
-        publicPath: ''
-      }
+        publicPath: '',
+      },
     },
     html: {
       template: path.resolve('./src/index.html'),

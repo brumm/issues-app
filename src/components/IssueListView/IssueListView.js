@@ -2,12 +2,7 @@ import React from 'react'
 import { withRouter, Redirect } from 'react-router-dom'
 import parseGithubUrl from 'parse-github-url'
 import TimeAgo from 'react-timeago'
-import {
-  List,
-  AutoSizer,
-  CellMeasurer,
-  CellMeasurerCache,
-} from 'react-virtualized'
+import { List, AutoSizer, CellMeasurer, CellMeasurerCache } from 'react-virtualized'
 
 import { mapObject } from 'utils'
 

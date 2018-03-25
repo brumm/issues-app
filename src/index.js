@@ -16,9 +16,7 @@ const BLACKLISTED_KEYS = ['requests']
 get(STATE_KEY).then(persistedState => {
   const store = createStore(persistedState)
 
-  store.subscribe(() =>
-    set(STATE_KEY, omit(store.getState(), BLACKLISTED_KEYS))
-  )
+  store.subscribe(() => set(STATE_KEY, omit(store.getState(), BLACKLISTED_KEYS)))
 
   render(
     <Provider store={store}>

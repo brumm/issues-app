@@ -74,9 +74,8 @@ class App extends React.Component {
           }
         />
 
-        {
-          // prettier-ignore
-          do {
+        {// prettier-ignore
+        do {
             if (!user.token) {
               <LoginPage onGetToken={token => bootstrap(token)} />
             } else if (!filterId) {
@@ -90,8 +89,7 @@ class App extends React.Component {
                 filterId={filterId}
               />
             }
-          }
-        }
+          }}
       </Column>
     )
   }

@@ -61,9 +61,7 @@ class ListItem extends React.Component {
           {title}
         </Row>
 
-        {truncatedBody.length > 0 && (
-          <div className={css.body}>{truncatedBody}</div>
-        )}
+        {truncatedBody.length > 0 && <div className={css.body}>{truncatedBody}</div>}
       </NavLink>
     )
   }
