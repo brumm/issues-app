@@ -21,8 +21,7 @@
     "server": "node dev-server.js --run-electron",
     "test": "nwb test",
     "test:watch": "nwb test --server",
-    "package":
-      "rm -rf ./release && electron-packager --icon icon-1024.icns --overwrite --asar --ignore='src|main|tests' --prune --platform=darwin --arch=x64 --out='release' ."
+    "package": "rm -rf ./release && electron-packager --icon icon-1024.icns --overwrite --asar --ignore='src|main|tests' --prune --platform=darwin --arch=x64 --out='release' ."
   },
   "dependencies": {
     "electron-devtools-installer": "^2.2.3",
@@ -30,10 +29,6 @@
     "electron-window-state": "^4.1.1",
     "idb-keyval": "^3.0.1",
     "lodash.isplainobject": "^4.0.6",
-    "markdown-it": "^8.4.1",
-    "markdown-it-emoji": "^1.4.0",
-    "markdown-it-highlightjs": "^3.0.0",
-    "markdown-it-task-lists": "^2.1.1",
     "normalizr": "^3.2.4",
     "parse-github-url": "^1.0.2",
     "parse-link-header": "^1.0.1",
@@ -44,12 +39,18 @@
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "react-svg-spinner": "^1.0.0",
+    "react-syntax-highlighter": "^7.0.2",
     "react-timeago": "^3.4.3",
     "react-virtualized": "^9.18.5",
     "redux": "^3.7.2",
     "redux-batched-actions": "^0.2.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
+    "remark": "^9.0.0",
+    "remark-emoji": "^2.0.1",
+    "remark-github": "^7.0.3",
+    "remark-react": "^4.0.1",
+    "remark-task-list": "0.0.2",
     "remove-markdown": "^0.2.2",
     "striptags": "^3.1.1",
     "tinycolor2": "^1.4.1",
@@ -58,6 +59,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-eslint": "^7.2.3",
     "babel-plugin-transform-do-expressions": "^6.22.0",
     "babel-preset-env": "^1.6.1",
     "electron": "^1.8.4",

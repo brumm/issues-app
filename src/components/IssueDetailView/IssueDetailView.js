@@ -27,7 +27,7 @@ import css from './IssueDetailView.scss'
     author: entities.users[issue.user],
   }
 }, actionCreators)
-export default class IssueDetailView extends React.Component {
+export default class IssueDetailView extends React.PureComponent {
   componentDidMount() {
     this.loadComments(this.props.issue.id)
   }
@@ -49,13 +49,17 @@ export default class IssueDetailView extends React.Component {
 
   render() {
     const {
-      issue: { title, url, html_url, number, body, shortName, created_at, reactions },
+      issue: { title, url, html_url, number, body, shortName, created_at, reactions, repository },
       author,
       comments,
       events,
       labels,
       isLoading,
     } = this.props
+
+    console.groupCollapsed('currentIssue')
+    console.log(this.props.issue)
+    console.groupEnd('currentIssue')
 
     const hasReactions = reactions.total_count > 0
     const commentsAndEvents = [...comments, ...events].sort(
@@ -93,7 +97,13 @@ export default class IssueDetailView extends React.Component {
             className={css.issueBodyContainer}
             style={{ minHeight: hasReactions ? 30 : 0 }}
           >
-            {body && <GithubFlavoredMarkdown source={body} className={css.issueBody} />}
+            {body && (
+              <GithubFlavoredMarkdown
+                source={body}
+                className={css.issueBody}
+                repository={repository}
+              />
+            )}
             {hasReactions && <Reactions reactions={reactions} />}
           </Column>
           {commentsAndEvents.length === 0 ? (

@@ -13,15 +13,11 @@ const mapStateToProps = ({ entities }, { user: userId }) => ({
   user: entities.users[userId],
 })
 
-const Comment = ({ compact = false, user, body, updated_at, reactions }) => {
+const Comment = ({ compact = false, user, body, updated_at, reactions, html_url }) => {
   const hasReactions = reactions.total_count > 0
 
   return (
-    <Column
-      className={css.container}
-      shrink={0}
-      style={{ marginTop: compact ? -3 : null }}
-    >
+    <Column className={css.container} shrink={0} style={{ marginTop: compact ? -3 : null }}>
       {compact === false && (
         <Row className={css.header} shrink={0} alignItems="center" grow={1}>
           <UserBadge size={28} radius={3} avatar={user.avatar_url} />
@@ -33,7 +29,7 @@ const Comment = ({ compact = false, user, body, updated_at, reactions }) => {
       )}
 
       <div className={css.commentBody}>
-        <GithubFlavoredMarkdown source={body} />
+        <GithubFlavoredMarkdown source={body} repository={html_url} />
         {hasReactions && <Reactions reactions={reactions} />}
       </div>
     </Column>

@@ -423,12 +423,19 @@
     blockquote,
     dl,
     ol,
-    p,
     pre,
     table,
     ul {
       margin-top: 0;
       margin-bottom: 16px;
+    }
+
+    p {
+      margin-top: 0;
+    }
+
+    p + p {
+      margin-top: 16px;
     }
 
     hr {
@@ -556,6 +563,10 @@
       line-height: 1.45;
       background-color: #f7f7f7;
       border-radius: 3px;
+    }
+
+    pre > pre {
+      padding: 0;
     }
 
     .highlight pre {
