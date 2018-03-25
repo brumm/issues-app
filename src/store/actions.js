@@ -63,12 +63,13 @@ export const bootstrap = token => (dispatch, getState) => {
   })
 }
 
-export const refresh = () => (dispatch, getState) => {
+export const refresh = issueId => (dispatch, getState) => {
   dispatch(loadNotifications())
   // prettier-ignore
   Promise.all([
     dispatch(loadIssues()),
-    dispatch(loadUserRepos())
+    dispatch(loadUserRepos()),
+    dispatch(loadComments(issueId))
   ]).then(() => {
     dispatch(refreshFilters())
   })
@@ -91,6 +92,9 @@ export const loadUserRepos = () => (dispatch, getState) =>
   })
 
 export const loadComments = issueId => (dispatch, getState) => {
+  if (!issueId) {
+    return
+  }
   const issue = getState().entities.issues[issueId]
   const { html_url } = issue
   const { owner, name, filepath } = parseGithubUrl(html_url)

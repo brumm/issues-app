@@ -67,7 +67,7 @@ class App extends React.Component {
           right={
             user.token && (
               <Row>
-                <TitlebarButton icon="sync" onClick={refresh} spin={isLoading} />
+                <TitlebarButton icon="sync" onClick={() => refresh(issueId)} spin={isLoading} />
                 <TitlebarButton icon="sign-out" onClick={() => logout(history.replace)} />
               </Row>
             )
