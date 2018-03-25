@@ -15,7 +15,6 @@ module.exports = {
         publicPath: ''
       }
     },
-    uglify: false,
     html: {
       template: path.resolve('./src/index.html'),
       title: package.name,
