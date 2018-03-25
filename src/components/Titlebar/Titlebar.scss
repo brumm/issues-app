@@ -7,6 +7,7 @@
   background-color: #f6f6f6;
   background-image: linear-gradient(#ededed 0, #ededed 1px, #e7e7e7 2px, #d1d1d1 100%);
   border-bottom: 1px solid #afafaf;
+  border-radius: 5px 5px 0 0;
 
   [class^='window-inactive'] & {
     background-image: none;
