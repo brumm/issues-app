@@ -29,16 +29,16 @@ import css from './IssueDetailView.scss'
 }, actionCreators)
 export default class IssueDetailView extends React.PureComponent {
   componentDidMount() {
-    this.loadComments(this.props.issue.id)
+    this.loadDetails(this.props.issue.id)
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.issue.id !== this.props.issue.id) {
-      this.loadComments(nextProps.issue.id)
+      this.loadDetails(nextProps.issue.id)
     }
   }
 
-  loadComments(issueId) {
+  loadDetails(issueId) {
     setTimeout(() => {
       if (this.props.issue.comments > 0) {
         this.props.loadComments(issueId)
