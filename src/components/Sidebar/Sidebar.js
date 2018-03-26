@@ -6,7 +6,7 @@ import Octicon from 'react-octicon'
 
 import { Row, Column } from 'components/Layout'
 import UserBadge from 'components/UserBadge'
-import { mapObject } from 'utils'
+import { mapObject, sortByOrder } from 'utils'
 
 import css from './Sidebar.scss'
 
@@ -16,6 +16,8 @@ const ICON_MAP = {
   repo: 'repo',
   member: 'person',
 }
+
+const sortOrder = ['all', 'filter', 'member', 'repo']
 
 const Group = ({ label, items, onToggle, isCollapsed }) => (
   <Column shrink={0}>
@@ -52,7 +54,9 @@ class Sidebar extends React.Component {
     {}
   )
   render() {
-    const { groups, user } = this.props
+    let { groups, user } = this.props
+    groups = mapObject(groups, (label, items) => ({ label, items }))
+    groups = groups.sort(sortByOrder(sortOrder, 'label'))
 
     return (
       <Column className={css.container} grow={1}>
@@ -64,12 +68,12 @@ class Sidebar extends React.Component {
             containerStyle={{ padding: 10 }}
           />
         )}
-        {mapObject(groups, (groupLabel, items) => (
+        {groups.map(({ label, items }) => (
           <Group
-            key={groupLabel}
-            label={groupLabel}
+            key={label}
+            label={label}
             items={items}
-            isCollapsed={this.state[groupLabel]}
+            isCollapsed={this.state[label]}
             onToggle={(label, toggleState) =>
               this.setState({
                 [label]: toggleState,

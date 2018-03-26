@@ -9,6 +9,9 @@ export const mapObject = (object, callback) =>
 export const filterObject = (object, callback) =>
   Object.keys(object).filter(key => callback(key, object[key]))
 
+export const sortByOrder = (order, accessor) => ({ [accessor]: propA }, { [accessor]: propB }) =>
+  order.indexOf(propA) < order.indexOf(propB) ? -1 : 1
+
 export const ghRequestAll = ({ url, headers, mapToResult = item => item }) => {
   url = new URL(`https://api.github.com/${url}`)
   url.searchParams.set('page', 1)
