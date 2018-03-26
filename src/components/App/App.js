@@ -1,9 +1,7 @@
 import React from 'react'
-import Flex from 'flex-component'
-import { Route, Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import { remote } from 'electron'
 import { connect } from 'react-redux'
-import Octicon from 'react-octicon'
 
 import { actionCreators } from 'store'
 
@@ -44,7 +42,6 @@ class App extends React.Component {
       isLoading,
       user,
       history,
-      location,
       initialFilterId,
     } = this.props
 

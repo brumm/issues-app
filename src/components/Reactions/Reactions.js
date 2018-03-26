@@ -25,7 +25,7 @@ const Reactions = connect(({ emojis }) => ({
         count > 0 ? (
           <Row key={name} className={css.reaction}>
             <div className={css.emoji}>
-              <img src={emojis[emojiMap[name]]} />
+              <img src={emojis[emojiMap[name]]} alt={name} />
             </div>
             <div style={{ marginLeft: 5 }}>{`× ${count}`}</div>
           </Row>

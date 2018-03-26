@@ -1,7 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import parseGithubUrl from 'parse-github-url'
-import groupBy from 'lodash/groupBy'
 import TimeAgo from 'react-timeago'
 
 import { actionCreators } from 'store'
@@ -39,7 +37,7 @@ class IssueDetailView extends React.Component {
 
   render() {
     const {
-      issue: { title, url, html_url, number, body, shortName, created_at, reactions, repository },
+      issue: { title, html_url, body, shortName, created_at, reactions, repository },
       author,
       comments,
       events,

@@ -157,7 +157,7 @@ function validateNullOrNumberArray(props, propName, componentName) {
     )
   }
   function IsNumeric(data) {
-    return typeof data == 'number'
+    return typeof data === 'number'
   }
   if (content.some(e => e != null && !IsNumeric(e))) {
     return new Error(

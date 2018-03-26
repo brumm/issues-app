@@ -2,7 +2,6 @@ import React from 'react'
 import Octicon from 'react-octicon'
 
 import { Row, Center } from 'components/Layout'
-import Loading from 'components/Loading'
 
 import css from './LoginPage.scss'
 

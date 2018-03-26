@@ -32,7 +32,6 @@ export default function user(state = initialState, action) {
 
     case 'RESET':
       return initialState
-      break
 
     default:
       return state

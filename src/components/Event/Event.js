@@ -3,7 +3,7 @@ import TimeAgo from 'react-timeago'
 import Octicon from 'react-octicon'
 import { connect } from 'react-redux'
 
-import { Row, Column } from 'components/Layout'
+import { Row } from 'components/Layout'
 import css from './Event.scss'
 
 const events = {

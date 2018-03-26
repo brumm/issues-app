@@ -17,7 +17,6 @@ export default enableBatching((state = initialState, action) => {
         ...state,
         [action.payload.id]: action.payload,
       }
-      break
 
     case 'FILTERS/UPDATE_RESULT':
       return {
@@ -27,11 +26,9 @@ export default enableBatching((state = initialState, action) => {
           result: action.payload.result,
         },
       }
-      break
 
     case 'RESET':
       return initialState
-      break
 
     default:
       return state

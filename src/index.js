@@ -7,7 +7,6 @@ import createStore from 'store'
 import { get, set } from 'idb-keyval'
 import omit from 'lodash/omit'
 
-import { initialFilterId } from 'store/reducers/filters'
 import App from 'components/App/App'
 
 const STATE_KEY = 'persistedState'

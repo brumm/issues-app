@@ -1,10 +1,6 @@
 import React from 'react'
 import { withRouter, Redirect } from 'react-router-dom'
-import parseGithubUrl from 'parse-github-url'
-import TimeAgo from 'react-timeago'
 import { List, AutoSizer, CellMeasurer, CellMeasurerCache } from 'react-virtualized'
-
-import { mapObject } from 'utils'
 
 import 'react-virtualized/styles.css'
 import ListItem from './ListItem'
@@ -18,7 +14,7 @@ class IssueListView extends React.Component {
   })
 
   render() {
-    const { issues, notifications, match } = this.props
+    const { issues, match } = this.props
 
     if (!match.params.issueId) {
       return <Redirect to={`/${match.params.filterId}/${issues[0].id}`} />

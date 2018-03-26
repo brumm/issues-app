@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Column } from 'components/Layout'
+import { Row } from 'components/Layout'
 
 const UserBadge = ({ avatar, name, radius, size = 20, style, containerStyle }) => (
   <Row alignItems="center" style={containerStyle} shrink={0}>
