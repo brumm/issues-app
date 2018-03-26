@@ -18,14 +18,6 @@ import style from './App.scss'
 const currentWindow = remote.getCurrentWindow()
 currentWindow.setSheetOffset(38)
 
-@connect(
-  ({ user, requests, filters }, { filterId }) => ({
-    user,
-    isLoading: !!requests.length,
-    initialFilterId: filterId || Object.keys(filters)[0],
-  }),
-  actionCreators
-)
 class App extends React.Component {
   state = {
     columnSizes: [200, 500, null],
@@ -58,6 +50,23 @@ class App extends React.Component {
 
     const { columnSizes } = this.state
 
+    let page
+    if (!user.token) {
+      page = <LoginPage onGetToken={token => bootstrap(token)} />
+    } else if (!filterId) {
+      page = <Redirect to={`/${initialFilterId}`} />
+    } else if (user.data) {
+      page = (
+        <InboxPage
+          isLoading={isLoading}
+          columnSizes={columnSizes}
+          onColumnResize={this.onColumnResize}
+          issueId={issueId}
+          filterId={filterId}
+        />
+      )
+    }
+
     return (
       <Column className={style.container}>
         <Titlebar
@@ -73,26 +82,17 @@ class App extends React.Component {
             )
           }
         />
-
-        {// prettier-ignore
-        do {
-            if (!user.token) {
-              <LoginPage onGetToken={token => bootstrap(token)} />
-            } else if (!filterId) {
-              <Redirect to={`/${initialFilterId}`} />
-            } else if (user.data) {
-              <InboxPage
-                isLoading={isLoading}
-                columnSizes={columnSizes}
-                onColumnResize={this.onColumnResize}
-                issueId={issueId}
-                filterId={filterId}
-              />
-            }
-          }}
+        {page}
       </Column>
     )
   }
 }
 
-export default App
+export default connect(
+  ({ user, requests, filters }, { filterId }) => ({
+    user,
+    isLoading: !!requests.length,
+    initialFilterId: filterId || Object.keys(filters)[0],
+  }),
+  actionCreators
+)(App)

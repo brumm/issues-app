@@ -17,17 +17,7 @@ import Reactions from 'components/Reactions/Reactions'
 
 import css from './IssueDetailView.scss'
 
-@connect(({ entities }, { issueId }) => {
-  const issue = entities.issues[issueId]
-  return {
-    issue,
-    comments: issue.commentIds.map(commentId => entities.comments[commentId]),
-    events: issue.eventIds.map(eventId => entities.events[eventId]),
-    labels: issue.labels.map(labelId => entities.labels[labelId]),
-    author: entities.users[issue.user],
-  }
-}, actionCreators)
-export default class IssueDetailView extends React.PureComponent {
+class IssueDetailView extends React.Component {
   componentDidMount() {
     this.loadDetails(this.props.issue.id)
   }
@@ -138,3 +128,14 @@ export default class IssueDetailView extends React.PureComponent {
     )
   }
 }
+
+export default connect(({ entities }, { issueId }) => {
+  const issue = entities.issues[issueId]
+  return {
+    issue,
+    comments: issue.commentIds.map(commentId => entities.comments[commentId]),
+    events: issue.eventIds.map(eventId => entities.events[eventId]),
+    labels: issue.labels.map(labelId => entities.labels[labelId]),
+    author: entities.users[issue.user],
+  }
+}, actionCreators)(IssueDetailView)

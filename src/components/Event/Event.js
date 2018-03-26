@@ -53,10 +53,7 @@ const events = {
     `${event.compact ? 'and' : event.actor.login} removed a review request`,
 }
 
-@connect(({ entities }, { actor: actorId }) => ({
-  actor: entities.users[actorId],
-}))
-export default class Event extends React.Component {
+class Event extends React.Component {
   render() {
     let eventFormatter = events[this.props.event]
 
@@ -73,3 +70,7 @@ export default class Event extends React.Component {
     ) : null
   }
 }
+
+export default connect(({ entities }, { actor: actorId }) => ({
+  actor: entities.users[actorId],
+}))(Event)

@@ -15,16 +15,7 @@ import IssueListView from 'components/IssueListView/IssueListView'
 import IssueDetailView from 'components/IssueDetailView/IssueDetailView'
 import Loading from 'components/Loading'
 
-@connect(
-  ({ entities, filters }, { filterId }) => ({
-    notifications: entities.notifications,
-    issues: Object.keys(entities.issues).length === 0 ? false : entities.issues,
-    groupedFilters: groupBy(mapObject(filters, (id, filter) => ({ ...filter, id })), 'category'),
-    activeFilter: filters[filterId],
-  }),
-  actionCreators
-)
-export default class InboxPage extends React.Component {
+class InboxPage extends React.Component {
   componentWillUpdate(nextProps) {
     this.maybeRefreshFilter(nextProps)
   }
@@ -105,3 +96,13 @@ export default class InboxPage extends React.Component {
     )
   }
 }
+
+export default connect(
+  ({ entities, filters }, { filterId }) => ({
+    notifications: entities.notifications,
+    issues: Object.keys(entities.issues).length === 0 ? false : entities.issues,
+    groupedFilters: groupBy(mapObject(filters, (id, filter) => ({ ...filter, id })), 'category'),
+    activeFilter: filters[filterId],
+  }),
+  actionCreators
+)(InboxPage)
