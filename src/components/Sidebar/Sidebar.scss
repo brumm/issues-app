@@ -30,6 +30,7 @@ $item-height: 28px;
 .item-selected {
   composes: item;
   background-color: #9faab8;
+  color: #fff;
 
   .count {
     background-color: #5c6877;
