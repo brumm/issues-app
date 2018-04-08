@@ -103,19 +103,19 @@ class IssueDetailView extends React.Component {
           ) : (
             <Column shrink={0} style={{ padding: 5 }}>
               {commentsAndEvents.map((commentOrEvent, index) => {
-                if (commentOrEvent.actor !== undefined) {
-                  const previousEvent = commentsAndEvents[index - 1]
-                  const isConsecutive =
-                    previousEvent && previousEvent.actor === commentOrEvent.actor
-                  return (
-                    <Event compact={isConsecutive} key={commentOrEvent.id} {...commentOrEvent} />
-                  )
-                } else {
+                if (commentOrEvent.actor === undefined) {
                   const previousComment = commentsAndEvents[index - 1]
                   const isConsecutive =
                     previousComment && previousComment.user === commentOrEvent.user
                   return (
                     <Comment compact={isConsecutive} key={commentOrEvent.id} {...commentOrEvent} />
+                  )
+                } else {
+                  const previousEvent = commentsAndEvents[index - 1]
+                  const isConsecutive =
+                    previousEvent && previousEvent.actor === commentOrEvent.actor
+                  return (
+                    <Event compact={isConsecutive} key={commentOrEvent.id} {...commentOrEvent} />
                   )
                 }
               })}
