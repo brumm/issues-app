@@ -2,6 +2,7 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { remote } from 'electron'
 import { connect } from 'react-redux'
+import debounce from 'lodash.debounce'
 
 import { actionCreators } from 'store'
 
@@ -17,10 +18,6 @@ const currentWindow = remote.getCurrentWindow()
 currentWindow.setSheetOffset(38)
 
 class App extends React.Component {
-  state = {
-    columnSizes: [200, 500, null],
-  }
-
   componentWillMount() {
     currentWindow.on('focus', () => document.body.classList.remove('window-inactive'))
     currentWindow.on('blur', () => document.body.classList.add('window-inactive'))
@@ -30,7 +27,7 @@ class App extends React.Component {
     currentWindow.removeAllListeners()
   }
 
-  onColumnResize = columnSizes => this.setState({ columnSizes })
+  onColumnResize = debounce(columnSizes => this.props.setSplitLayoutSizes(columnSizes), 200)
 
   render() {
     const {
@@ -43,9 +40,8 @@ class App extends React.Component {
       user,
       history,
       initialFilterId,
+      splitLayoutSizes,
     } = this.props
-
-    const { columnSizes } = this.state
 
     let page
     if (!user.token) {
@@ -56,7 +52,7 @@ class App extends React.Component {
       page = (
         <InboxPage
           isLoading={isLoading}
-          columnSizes={columnSizes}
+          columnSizes={splitLayoutSizes}
           onColumnResize={this.onColumnResize}
           issueId={issueId}
           filterId={filterId}
@@ -67,7 +63,7 @@ class App extends React.Component {
     return (
       <Column className={style.container}>
         <Titlebar
-          columnSizes={columnSizes}
+          columnSizes={splitLayoutSizes}
           left={null}
           center={user.token && <TitlebarButton icon="pencil" />}
           right={
@@ -86,10 +82,11 @@ class App extends React.Component {
 }
 
 export default connect(
-  ({ user, requests, filters }, { filterId }) => ({
+  ({ user, requests, filters, ui }, { filterId }) => ({
     user,
     isLoading: !!requests.length,
     initialFilterId: filterId || Object.keys(filters)[0],
+    splitLayoutSizes: ui.splitLayoutSizes,
   }),
   actionCreators
 )(App)

@@ -193,3 +193,8 @@ export const logout = navigate => dispatch => {
   })
   navigate('/')
 }
+
+export const setSplitLayoutSizes = sizes => ({
+  type: 'UI/SET_SPLIT_LAYOUT_SIZES',
+  payload: sizes,
+})

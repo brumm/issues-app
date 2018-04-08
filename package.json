@@ -28,6 +28,7 @@
     "electron-irpc": "0.0.2",
     "electron-window-state": "^4.1.1",
     "idb-keyval": "^3.0.1",
+    "lodash.debounce": "^4.0.8",
     "lodash.isplainobject": "^4.0.6",
     "normalizr": "^3.2.4",
     "parse-github-url": "^1.0.2",
