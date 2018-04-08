@@ -8,8 +8,8 @@ import { actionCreators } from 'store'
 import Titlebar, { TitlebarButton } from 'components/Titlebar/Titlebar'
 import { Row, Column } from 'components/Layout'
 
-import InboxPage from 'containers/InboxPage'
-import LoginPage from 'containers/LoginPage/LoginPage'
+import InboxPage from 'pages/InboxPage'
+import LoginPage from 'pages/LoginPage/LoginPage'
 
 import style from './App.scss'
 
